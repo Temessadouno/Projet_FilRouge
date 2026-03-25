@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      data-theme="dark">
+<head th:fragment="head">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title th:text="${pageTitle ?: 'AQL Commerce'}">AQL Commerce</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['attribute', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          colors: {
+            accent: '#F5C518',
+            dark: { bg: '#0f0f0f', nav: '#161616', card: '#1c1c1c', border: '#2e2e2e', input: '#242424', badge: '#2a2a2a' }
+          },
+          fontFamily: { sans: ['\'Outfit\'', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --accent: #F5C518; }
+    [data-theme="dark"] { background: #0f0f0f; color: #f0f0f0; }
+    [data-theme="light"] { background: #ffffff; color: #111111; }
+    .theme-dark { background:#0f0f0f; }
+    .theme-light { background:#ffffff; }
+    @media print { nav, .no-print { display: none !important; } body { background: white !important; color: black !important; } }
+  </style>
+</head>
+<body>
+<nav th:fragment="navbar" id="navbar"
+     class="sticky top-0 z-50 flex items-center justify-between px-6 py-3 border-b transition-colors duration-200"
+     style="background: var(--nav); border-color: var(--border);">
+  <a th:href="@{/}" class="text-xl font-extrabold tracking-tight" style="color: var(--accent);">
+    🛒 AQL Commerce
+  </a>
+  <div class="flex items-center gap-4 text-sm font-medium">
+    <a th:href="@{/produits}" class="hover:opacity-70 transition-opacity" style="color: var(--text);">Produits</a>
+    <sec:authorize access="hasRole('ADMIN')">
+      <a th:href="@{/admin}" class="hover:opacity-70 transition-opacity" style="color: var(--text);">Admin ⚙️</a>
+    </sec:authorize>
+    <sec:authorize access="hasRole('CLIENT')">
+      <a th:href="@{/panier}" class="relative flex items-center gap-1 px-3 py-1.5 rounded-lg font-semibold transition"
+         style="background: var(--accent); color: #000;">
+        🛍 Panier
+        <span th:text="${nbPanier ?: 0}"
+              class="ml-1 text-xs bg-black text-white rounded-full px-1.5 py-0.5 font-bold">0</span>
+      </a>
+    </sec:authorize>
+    
+   <!-- ✅ Déconnexion (connecté) -->
+<sec:authorize access="isAuthenticated()">
+  <form th:action="@{/auth/logout}" method="post">
+    <button type="submit"
+            class="px-3 py-1.5 rounded-lg border text-sm font-medium transition hover:opacity-70"
+            style="border-color: var(--border); color: var(--text); background: transparent;">
+      Déconnexion
+    </button>
+  </form>
+</sec:authorize>
+
+<!-- ✅ Connexion (non connecté) -->
+<sec:authorize access="isAnonymous()">
+  <a th:href="@{/auth/login}" class="px-3 py-1.5 rounded-lg border text-sm font-medium transition hover:opacity-70"
+     style="border-color: var(--border); color: var(--text);">
+     Connexion
+  </a>
+
+  <a th:href="@{/auth/register}" class="px-3 py-1.5 rounded-lg font-semibold text-sm transition hover:opacity-80"
+     style="background: var(--accent); color: #000;">
+     Inscription
+  </a>
+</sec:authorize>
+    
+    
+    <button onclick="toggleTheme()" title="Changer le thème"
+            class="w-8 h-8 rounded-full border flex items-center justify-center text-base transition hover:opacity-70"
+            style="border-color: var(--border); color: var(--text); background: transparent;">◑</button>
+  </div>
+</nav>
+<script th:fragment="scripts" src="/js/main.js"></script>
+</body>
+</html>

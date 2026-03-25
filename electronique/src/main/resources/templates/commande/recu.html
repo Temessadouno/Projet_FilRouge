@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-theme="dark">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body style="background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif;">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-2xl mx-auto px-4 py-10">
+  <!-- Reçu card -->
+  <div id="recu-print" class="rounded-2xl border overflow-hidden"
+       style="background: var(--card); border-color: var(--border);">
+    <!-- Header -->
+    <div class="text-center py-8 px-6" style="border-bottom: 2px dashed var(--border); background: var(--badge);">
+      <p class="text-4xl mb-3">🧾</p>
+      <h1 class="text-2xl font-extrabold">Reçu de commande</h1>
+      <p class="text-3xl font-extrabold mt-2" style="color: var(--accent);">
+        #<span th:text="${commande.id}"></span>
+      </p>
+      <p class="text-sm mt-2" style="color: var(--muted);"
+         th:text="${#temporals.format(commande.dateCommande,'dd/MM/yyyy à HH:mm')}"></p>
+      <span class="inline-block mt-3 px-4 py-1 rounded-full text-xs font-bold"
+            th:text="${commande.statut}"
+            th:classappend="${commande.statut.toString() == 'VALIDEE' ? ' st-validee' : (commande.statut.toString() == 'ANNULEE' ? ' st-annulee' : ' st-encours')}">
+      </span>
+    </div>
+
+    <style>
+      .st-encours { background: #fef3c7; color: #92400e; }
+      .st-validee { background: #dcfce7; color: #166534; }
+      .st-annulee { background: #fee2e2; color: #991b1b; }
+    </style>
+
+    <!-- Infos client -->
+    <div class="px-6 py-5" style="border-bottom: 1px solid var(--border);">
+      <p class="text-xs font-bold uppercase tracking-wider mb-3" style="color: var(--muted);">Informations client</p>
+      <div class="grid grid-cols-2 gap-2 text-sm">
+        <div>
+          <p style="color: var(--muted);" class="text-xs">Client</p>
+          <p class="font-semibold" th:text="${commande.client.nomComplet}"></p>
+        </div>
+        <div>
+          <p style="color: var(--muted);" class="text-xs">Email</p>
+          <p class="font-semibold" th:text="${commande.client.email}"></p>
+        </div>
+        <div class="col-span-2">
+          <p style="color: var(--muted);" class="text-xs">Adresse de livraison</p>
+          <p class="font-semibold" th:text="${commande.adresseLivraison}"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tableau lignes -->
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-xs uppercase tracking-wider" style="background: var(--badge); color: var(--muted);">
+          <th class="px-5 py-3 text-left">Produit</th>
+          <th class="px-5 py-3 text-center">Qté</th>
+          <th class="px-5 py-3 text-right">Prix unit.</th>
+          <th class="px-5 py-3 text-right">Sous-total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="ligne : ${commande.lignes}" class="border-t" style="border-color: var(--border);">
+          <td class="px-5 py-3 font-medium" th:text="${ligne.produit.nom}"></td>
+          <td class="px-5 py-3 text-center" th:text="${ligne.quantite}"></td>
+          <td class="px-5 py-3 text-right"
+              th:text="${#numbers.formatDecimal(ligne.prixUnitaire,1,2)} + ' MAD'"></td>
+          <td class="px-5 py-3 text-right font-bold" style="color: var(--accent);"
+              th:text="${#numbers.formatDecimal(ligne.sousTotal,1,2)} + ' MAD'"></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="border-t-2" style="border-color: var(--accent);">
+          <td colspan="3" class="px-5 py-4 text-right font-extrabold text-base">TOTAL</td>
+          <td class="px-5 py-4 text-right font-extrabold text-xl" style="color: var(--accent);"
+              th:text="${#numbers.formatDecimal(commande.total,1,2)} + ' MAD'"></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- Pied de page reçu -->
+    <div class="text-center py-5 text-xs" style="color: var(--muted); border-top: 1px dashed var(--border);">
+      Merci pour votre commande ! 🎉 — AQL Commerce
+    </div>
+  </div>
+
+  <!-- Actions (cachées à l'impression) -->
+  <div class="flex gap-3 justify-center mt-6 no-print">
+    <button onclick="window.print()"
+            class="px-6 py-3 rounded-xl font-bold text-black transition hover:opacity-80"
+            style="background: var(--accent);">🖨 Imprimer le reçu</button>
+    <a th:href="@{/commande/mes-commandes}"
+       class="px-5 py-3 rounded-xl border font-semibold text-sm transition hover:opacity-70"
+       style="border-color: var(--border); color: var(--text);">Mes commandes</a>
+    <a th:href="@{/}"
+       class="px-5 py-3 rounded-xl border font-semibold text-sm transition hover:opacity-70"
+       style="border-color: var(--border); color: var(--text);">Accueil</a>
+  </div>
+</main>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

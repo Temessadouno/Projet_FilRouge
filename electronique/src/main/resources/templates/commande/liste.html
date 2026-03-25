@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-theme="dark">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body style="background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif;">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-4xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-extrabold mb-8">📋 Mes commandes</h1>
+
+  <div th:if="${#lists.isEmpty(commandes)}" class="text-center py-20 rounded-2xl"
+       style="background: var(--card); border: 1px solid var(--border);">
+    <p class="text-5xl mb-4">📦</p>
+    <p class="text-xl font-semibold mb-2">Aucune commande</p>
+    <a th:href="@{/produits}" class="mt-4 inline-block px-6 py-3 rounded-xl font-bold text-black"
+       style="background: var(--accent);">Commencer mes achats</a>
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <div th:each="cmd : ${commandes}"
+         class="rounded-2xl border overflow-hidden transition hover:shadow-lg"
+         style="background: var(--card); border-color: var(--border);">
+      <div class="flex items-center justify-between px-5 py-4 border-b" style="border-color: var(--border); background: var(--badge);">
+        <div class="flex items-center gap-4">
+          <span class="font-extrabold text-base" style="color: var(--accent);">Commande #<span th:text="${cmd.id}"></span></span>
+          <span class="text-xs" style="color: var(--muted);"
+                th:text="${#temporals.format(cmd.dateCommande,'dd/MM/yyyy à HH:mm')}"></span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1 rounded-full text-xs font-bold"
+                th:text="${cmd.statut}"
+                th:classappend="${cmd.statut.toString() == 'VALIDEE' ? ' st-validee' : (cmd.statut.toString() == 'ANNULEE' ? ' st-annulee' : ' st-encours')}">
+          </span>
+          <a th:href="@{/commande/recu/{id}(id=${cmd.id})}"
+             class="text-xs px-3 py-1.5 rounded-lg font-semibold transition hover:opacity-80"
+             style="background: var(--accent); color: #000;">Voir le reçu</a>
+        </div>
+      </div>
+      <div class="px-5 py-3 flex items-center justify-between">
+        <div class="flex gap-2 flex-wrap">
+          <span th:each="ligne : ${cmd.lignes}" class="text-xs py-1 px-2 rounded-lg"
+                style="background: var(--badge); color: var(--muted);"
+                th:text="${ligne.produit.nom} + ' x' + ${ligne.quantite}"></span>
+        </div>
+        <span class="font-extrabold text-lg" style="color: var(--accent);"
+              th:text="${#numbers.formatDecimal(cmd.total,1,2)} + ' MAD'"></span>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .st-encours { background: #fef3c7; color: #92400e; }
+    .st-validee { background: #dcfce7; color: #166534; }
+    .st-annulee { background: #fee2e2; color: #991b1b; }
+  </style>
+</main>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

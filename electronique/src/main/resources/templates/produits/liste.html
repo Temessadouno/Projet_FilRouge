@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      data-theme="dark">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body style="background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif;">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-6xl mx-auto px-4 py-8">
+  <!-- Flash -->
+  <div th:if="${success}" class="flash-msg mb-4 px-4 py-3 rounded-xl text-sm font-medium"
+       style="background: #dcfce7; color: #166534; border: 1px solid #86efac;" th:text="${success}"></div>
+  <div th:if="${erreur}" class="flash-msg mb-4 px-4 py-3 rounded-xl text-sm font-medium"
+       style="background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;" th:text="${erreur}"></div>
+
+  <!-- Barre de recherche -->
+  <form th:action="@{/produits}" method="get"
+        class="flex gap-2 mb-5">
+    <input type="text" name="q" th:value="${q}"
+           placeholder="Rechercher un produit, une marque..."
+           class="flex-1 px-4 py-2.5 rounded-xl border text-sm outline-none focus:ring-2 transition"
+           style="background: var(--input); border-color: var(--border); color: var(--text);"/>
+    <button type="submit"
+            class="px-5 py-2.5 rounded-xl font-bold text-black text-sm transition hover:opacity-80"
+            style="background: var(--accent);">🔍 Rechercher</button>
+  </form>
+
+  <!-- Filtres catégories -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    <a th:href="@{/produits}"
+       class="px-4 py-1.5 rounded-full text-xs font-semibold border transition hover:opacity-80"
+       th:classappend="${categorieId == null ? ' cat-active' : ''}"
+       style="border-color: var(--border); color: var(--text);">
+      Tous les produits
+    </a>
+    <a th:each="cat : ${categories}"
+       th:href="@{/produits(categorieId=${cat.id})}"
+       th:text="${cat.nom}"
+       class="px-4 py-1.5 rounded-full text-xs font-semibold border transition hover:opacity-80"
+       th:classappend="${categorieId == cat.id ? ' cat-active' : ''}"
+       style="border-color: var(--border); color: var(--text);"></a>
+  </div>
+
+  <style>
+    .cat-active { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
+  </style>
+
+  <!-- Résultats -->
+  <p class="text-xs mb-4" style="color: var(--muted);"
+     th:text="${#lists.size(produits)} + ' produit(s) trouvé(s)'"></p>
+
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+    <div th:each="produit : ${produits}"
+         class="rounded-2xl overflow-hidden border transition-transform hover:-translate-y-1 hover:shadow-2xl"
+         style="background: var(--card); border-color: var(--border);">
+      <div class="relative overflow-hidden" style="height: 180px;">
+        <img th:src="${produit.imageUrl}" th:alt="${produit.nom}"
+             onerror="this.src='/images/placeholder.png'"
+             class="w-full h-full object-cover transition-transform hover:scale-105 duration-300"/>
+        <span th:unless="${produit.enStock}"
+              class="absolute top-2 right-2 text-xs font-bold px-2 py-1 rounded-full"
+              style="background: #ef4444; color: #fff;">Rupture</span>
+      </div>
+      <div class="p-3">
+        <span class="text-xs font-semibold px-2 py-0.5 rounded-full"
+              style="background: var(--badge); color: var(--accent);"
+              th:text="${produit.categorie.nom}"></span>
+        <h3 class="font-semibold mt-2 mb-0.5 text-sm leading-tight" th:text="${produit.nom}"></h3>
+        <p class="text-xs mb-2" style="color: var(--muted);" th:text="${produit.marque}"></p>
+        <div class="flex items-center justify-between mt-2">
+          <span class="font-extrabold text-base" style="color: var(--accent);"
+                th:text="${#numbers.formatDecimal(produit.prix,1,2)} + ' MAD'"></span>
+          <span th:if="${produit.enStock}" class="text-xs font-semibold" style="color: #22c55e;">✓ Stock</span>
+          <span th:unless="${produit.enStock}" class="text-xs font-semibold" style="color: #ef4444;">Rupture</span>
+        </div>
+        <div class="flex gap-2 mt-3">
+          <a th:href="@{/produits/{id}(id=${produit.id})}"
+             class="flex-1 text-center text-xs py-1.5 rounded-lg border font-medium transition hover:opacity-70"
+             style="border-color: var(--border); color: var(--text);">Détail</a>
+          <sec:authorize access="hasRole('CLIENT')">
+            <form th:action="@{/panier/ajouter}" method="post" th:if="${produit.enStock}" class="flex-1">
+              <input type="hidden" name="produitId" th:value="${produit.id}"/>
+              <input type="hidden" name="quantite" value="1"/>
+              <button type="submit"
+                      class="w-full text-xs py-1.5 rounded-lg font-bold text-black transition hover:opacity-80"
+                      style="background: var(--accent);">+ Panier</button>
+            </form>
+          </sec:authorize>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${#lists.isEmpty(produits)}" class="text-center py-20" style="color: var(--muted);">
+    <p class="text-4xl mb-4">🔍</p>
+    <p class="text-lg">Aucun produit trouvé.</p>
+    <a th:href="@{/produits}" class="mt-4 inline-block text-sm font-semibold" style="color: var(--accent);">
+      ← Voir tous les produits
+    </a>
+  </div>
+</main>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

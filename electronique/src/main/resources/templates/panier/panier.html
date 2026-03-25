@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-theme="dark">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body style="background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif;">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-4xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-extrabold mb-8">🛍 Mon Panier</h1>
+
+  <!-- Flash -->
+  <div th:if="${success}" class="flash-msg mb-4 px-4 py-3 rounded-xl text-sm font-medium"
+       style="background: #dcfce7; color: #166534; border: 1px solid #86efac;"
+       th:text="${success}"></div>
+
+  <!-- Panier vide -->
+  <div th:if="${#lists.isEmpty(items)}" class="text-center py-24 rounded-2xl"
+       style="background: var(--card); border: 1px solid var(--border);">
+    <p class="text-6xl mb-4">🛒</p>
+    <p class="text-xl font-semibold mb-2">Votre panier est vide</p>
+    <p class="text-sm mb-6" style="color: var(--muted);">Ajoutez des produits pour commencer</p>
+    <a th:href="@{/produits}"
+       class="inline-block px-6 py-3 rounded-xl font-bold text-black transition hover:opacity-80"
+       style="background: var(--accent);">Voir les produits</a>
+  </div>
+
+  <!-- Tableau panier -->
+  <div th:unless="${#lists.isEmpty(items)}" class="rounded-2xl overflow-hidden border"
+       style="background: var(--card); border-color: var(--border);">
+    <table class="w-full">
+      <thead>
+        <tr class="text-xs font-semibold uppercase tracking-wider text-left"
+            style="background: var(--badge); color: var(--muted);">
+          <th class="px-5 py-3">Produit</th>
+          <th class="px-5 py-3">Prix unitaire</th>
+          <th class="px-5 py-3">Quantité</th>
+          <th class="px-5 py-3">Sous-total</th>
+          <th class="px-5 py-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="item : ${items}" class="border-t" style="border-color: var(--border);">
+
+          <!-- Produit -->
+          <td class="px-5 py-4">
+            <div class="flex items-center gap-3">
+              <img th:src="${item.produit.imageUrl}" th:alt="${item.produit.nom}"
+                   onerror="this.src='/images/placeholder.png'"
+                   class="w-14 h-14 object-cover rounded-xl"/>
+              <div>
+                <p class="font-semibold text-sm" th:text="${item.produit.nom}"></p>
+                <p class="text-xs" style="color: var(--muted);"
+                   th:text="${item.produit.marque}"></p>
+              </div>
+            </div>
+          </td>
+
+          <!-- Prix -->
+          <td class="px-5 py-4 font-bold" style="color: var(--accent);"
+              th:text="${#numbers.formatDecimal(item.produit.prix,1,2) + ' MAD'}"></td>
+
+          <!-- Quantité -->
+          <td class="px-5 py-4">
+            <form th:action="@{/panier/modifier}" method="post" class="flex items-center gap-2">
+              <input type="hidden" name="produitId" th:value="${item.produit.id}"/>
+              <input type="number" name="quantite" th:value="${item.quantite}" min="0"
+                     th:max="${item.produit.stock}"
+                     class="qty-auto-submit w-16 px-2 py-1.5 rounded-lg border text-center font-bold text-sm outline-none"
+                     style="background: var(--input); border-color: var(--border); color: var(--text);"/>
+              <span class="text-xs" style="color: var(--muted);"
+                    th:text="${'/ ' + item.produit.stock}"></span>
+            </form>
+          </td>
+
+          <!-- Sous-total -->
+          <td class="px-5 py-4 font-extrabold text-base" style="color: var(--accent);"
+              th:text="${#numbers.formatDecimal(item.produit.prix * item.quantite,1,2) + ' MAD'}"></td>
+
+          <!-- Supprimer -->
+          <td class="px-5 py-4">
+            <form th:action="@{/panier/supprimer}" method="post">
+              <input type="hidden" name="produitId" th:value="${item.produit.id}"/>
+              <button type="submit"
+                      class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white transition hover:opacity-80"
+                      style="background: #ef4444;">✕</button>
+            </form>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Footer panier -->
+    <div class="flex items-center justify-between px-5 py-5 border-t flex-wrap gap-4"
+         style="border-color: var(--border); background: var(--badge);">
+      <div>
+        <p class="text-sm" style="color: var(--muted);">Total panier</p>
+        <p class="text-3xl font-extrabold" style="color: var(--accent);"
+           th:text="${#numbers.formatDecimal(total,1,2) + ' MAD'}"></p>
+      </div>
+
+      <div class="flex gap-3">
+        <form th:action="@{/panier/vider}" method="post">
+          <button type="submit"
+                  class="px-5 py-2.5 rounded-xl border font-semibold text-sm transition hover:opacity-70"
+                  style="border-color: var(--border); color: var(--text); background: transparent;">
+            🗑 Vider
+          </button>
+        </form>
+
+        <a th:href="@{/commande/confirmer}"
+           class="px-6 py-2.5 rounded-xl font-bold text-black text-sm transition hover:opacity-80 hover:scale-[1.02]"
+           style="background: var(--accent);">
+          Commander →
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-theme="dark">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body style="background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif;">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-6xl mx-auto px-4 py-10">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-extrabold">⚙️ Tableau de bord Admin</h1>
+    <span class="text-xs px-3 py-1.5 rounded-full font-bold" style="background: var(--accent); color: #000;">ADMIN</span>
+  </div>
+
+  <!-- Flash -->
+  <div th:if="${success}" class="flash-msg mb-4 px-4 py-3 rounded-xl text-sm font-medium"
+       style="background: #dcfce7; color: #166534; border: 1px solid #86efac;" th:text="${success}"></div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+    <div class="rounded-2xl border p-6 text-center" style="background: var(--card); border-color: var(--border);">
+      <p class="text-5xl font-extrabold" style="color: var(--accent);" th:text="${nbProduits}">0</p>
+      <p class="text-sm mt-2" style="color: var(--muted);">Produits actifs</p>
+    </div>
+    <div class="rounded-2xl border p-6 text-center" style="background: var(--card); border-color: var(--border);">
+      <p class="text-5xl font-extrabold" style="color: var(--accent);" th:text="${nbCommandes}">0</p>
+      <p class="text-sm mt-2" style="color: var(--muted);">Commandes totales</p>
+    </div>
+    <div class="rounded-2xl border p-6 text-center" style="background: var(--card); border-color: var(--border);">
+      <p class="text-5xl font-extrabold" style="color: var(--accent);" th:text="${nbClients}">0</p>
+      <p class="text-sm mt-2" style="color: var(--muted);">Clients inscrits</p>
+    </div>
+  </div>
+
+  <!-- Navigation admin -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+    <a th:href="@{/admin/produits}"
+       class="rounded-2xl border p-5 text-center font-semibold transition hover:border-yellow-400 hover:scale-[1.02] group"
+       style="background: var(--card); border-color: var(--border);">
+      <p class="text-3xl mb-2">📦</p>
+      <p class="text-sm group-hover:text-yellow-400 transition">Produits</p>
+    </a>
+    <a th:href="@{/admin/categories}"
+       class="rounded-2xl border p-5 text-center font-semibold transition hover:border-yellow-400 hover:scale-[1.02] group"
+       style="background: var(--card); border-color: var(--border);">
+      <p class="text-3xl mb-2">🗂</p>
+      <p class="text-sm group-hover:text-yellow-400 transition">Catégories</p>
+    </a>
+    <a th:href="@{/admin/commandes}"
+       class="rounded-2xl border p-5 text-center font-semibold transition hover:border-yellow-400 hover:scale-[1.02] group"
+       style="background: var(--card); border-color: var(--border);">
+      <p class="text-3xl mb-2">📋</p>
+      <p class="text-sm group-hover:text-yellow-400 transition">Commandes</p>
+    </a>
+    <a th:href="@{/admin/clients}"
+       class="rounded-2xl border p-5 text-center font-semibold transition hover:border-yellow-400 hover:scale-[1.02] group"
+       style="background: var(--card); border-color: var(--border);">
+      <p class="text-3xl mb-2">👥</p>
+      <p class="text-sm group-hover:text-yellow-400 transition">Clients</p>
+    </a>
+  </div>
+
+  <!-- Dernières commandes -->
+  <h2 class="text-xl font-bold mb-4">Dernières commandes</h2>
+  <div class="rounded-2xl border overflow-hidden" style="background: var(--card); border-color: var(--border);">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-xs uppercase tracking-wider" style="background: var(--badge); color: var(--muted);">
+          <th class="px-5 py-3 text-left">#</th>
+          <th class="px-5 py-3 text-left">Client</th>
+          <th class="px-5 py-3 text-left">Total</th>
+          <th class="px-5 py-3 text-left">Statut</th>
+          <th class="px-5 py-3 text-left">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="cmd : ${dernieresCommandes}" class="border-t hover:opacity-80 transition"
+            style="border-color: var(--border);">
+          <td class="px-5 py-3 font-bold" style="color: var(--accent);" th:text="'#' + ${cmd.id}"></td>
+          <td class="px-5 py-3 font-medium" th:text="${cmd.client.nomComplet}"></td>
+          <td class="px-5 py-3 font-bold" th:text="${#numbers.formatDecimal(cmd.total,1,2)} + ' MAD'"></td>
+          <td class="px-5 py-3">
+            <span class="px-2 py-0.5 rounded-full text-xs font-bold"
+                  th:text="${cmd.statut}"
+                  th:classappend="${cmd.statut.toString() == 'VALIDEE' ? ' st-validee' : (cmd.statut.toString() == 'ANNULEE' ? ' st-annulee' : ' st-encours')}">
+            </span>
+          </td>
+          <td class="px-5 py-3 text-xs" style="color: var(--muted);"
+              th:text="${#temporals.format(cmd.dateCommande,'dd/MM/yyyy')}"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="px-5 py-3 border-t" style="border-color: var(--border);">
+      <a th:href="@{/admin/commandes}" class="text-xs font-semibold" style="color: var(--accent);">
+        Voir toutes les commandes →
+      </a>
+    </div>
+  </div>
+
+  <style>
+    .st-encours { background: #fef3c7; color: #92400e; }
+    .st-validee { background: #dcfce7; color: #166534; }
+    .st-annulee { background: #fee2e2; color: #991b1b; }
+  </style>
+</main>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

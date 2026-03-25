@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-theme="dark">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body style="background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif;">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-2xl mx-auto px-4 py-10">
+  <div class="flex items-center gap-3 mb-6">
+    <a th:href="@{/admin/produits}" class="text-sm hover:opacity-70" style="color: var(--muted);">← Produits</a>
+    <h1 class="text-2xl font-extrabold"
+        th:text="${produit.id != null ? '✏️ Modifier le produit' : '+ Nouveau produit'}"></h1>
+  </div>
+
+  <!-- Flash -->
+  <div th:if="${erreur}" class="flash-msg mb-4 px-4 py-3 rounded-xl text-sm font-medium"
+       style="background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;" th:text="${erreur}"></div>
+
+  <div class="rounded-2xl border p-8 flex flex-col gap-5" style="background: var(--card); border-color: var(--border);">
+    <form th:action="@{/admin/produits/sauvegarder}" method="post" class="flex flex-col gap-5">
+      <input type="hidden" name="id" th:value="${produit.id}"/>
+      <input type="hidden" name="deleted" th:value="${produit.deleted ?: false}"/>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wide mb-1.5" style="color: var(--muted);">Nom *</label>
+          <input type="text" name="nom" required th:value="${produit.nom}" placeholder="Nom du produit"
+                 class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:ring-2 transition"
+                 style="background: var(--input); border-color: var(--border); color: var(--text);"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wide mb-1.5" style="color: var(--muted);">Marque</label>
+          <input type="text" name="marque" th:value="${produit.marque}" placeholder="Marque"
+                 class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:ring-2 transition"
+                 style="background: var(--input); border-color: var(--border); color: var(--text);"/>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wide mb-1.5" style="color: var(--muted);">Description</label>
+        <textarea name="description" rows="3" th:text="${produit.description}" placeholder="Description du produit..."
+                  class="w-full px-4 py-3 rounded-xl border text-sm outline-none resize-none focus:ring-2 transition"
+                  style="background: var(--input); border-color: var(--border); color: var(--text);"></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 gap-5">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wide mb-1.5" style="color: var(--muted);">Prix (MAD) *</label>
+          <input type="number" name="prix" required step="0.01" min="0" th:value="${produit.prix}" placeholder="0.00"
+                 class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:ring-2 transition"
+                 style="background: var(--input); border-color: var(--border); color: var(--text);"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wide mb-1.5" style="color: var(--muted);">Stock *</label>
+          <input type="number" name="stock" required min="0" th:value="${produit.stock ?: 0}" placeholder="0"
+                 class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:ring-2 transition"
+                 style="background: var(--input); border-color: var(--border); color: var(--text);"/>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wide mb-1.5" style="color: var(--muted);">URL Image</label>
+        <input type="url" name="imageUrl" th:value="${produit.imageUrl}" placeholder="https://..."
+               class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:ring-2 transition"
+               style="background: var(--input); border-color: var(--border); color: var(--text);"/>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wide mb-1.5" style="color: var(--muted);">Catégorie *</label>
+        <select name="categorie.id" required
+                class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:ring-2 transition"
+                style="background: var(--input); border-color: var(--border); color: var(--text);">
+          <option value="">-- Choisir une catégorie --</option>
+          <option th:each="cat : ${categories}"
+                  th:value="${cat.id}"
+                  th:text="${cat.nom}"
+                  th:selected="${produit.categorie != null && produit.categorie.id == cat.id}"></option>
+        </select>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button type="submit"
+                class="flex-1 py-3 rounded-xl font-bold text-black transition hover:opacity-80"
+                style="background: var(--accent);">
+          💾 Sauvegarder
+        </button>
+        <a th:href="@{/admin/produits}"
+           class="flex-1 py-3 rounded-xl border font-semibold text-sm text-center transition hover:opacity-70"
+           style="border-color: var(--border); color: var(--text);">Annuler</a>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
