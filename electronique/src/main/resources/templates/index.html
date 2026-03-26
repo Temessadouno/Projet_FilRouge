@@ -8,19 +8,6 @@
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <style>
-  @keyframes fadeUp   { from { opacity:0; transform:translateY(32px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes shimmer  { 0%,100% { opacity:.4; } 50% { opacity:1; } }
-  @keyframes floatY   { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
-  @keyframes scanline { 0% { top:-5%; } 100% { top:105%; } }
-  @keyframes ticker   { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
-  @keyframes rotateSlow { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
-  @keyframes glowPulse { 0%,100%{box-shadow:0 0 30px rgba(245,197,24,.25);} 50%{box-shadow:0 0 60px rgba(245,197,24,.5);} }
-
-  .anim-1 { animation: fadeUp .7s cubic-bezier(.22,1,.36,1) .1s both; }
-  .anim-2 { animation: fadeUp .7s cubic-bezier(.22,1,.36,1) .25s both; }
-  .anim-3 { animation: fadeUp .7s cubic-bezier(.22,1,.36,1) .4s both; }
-  .anim-4 { animation: fadeUp .7s cubic-bezier(.22,1,.36,1) .55s both; }
-
   .hero-bg {
     position:absolute; inset:0; pointer-events:none;
     background:
@@ -34,11 +21,6 @@
       linear-gradient(90deg, rgba(245,197,24,.04) 1px, transparent 1px);
     background-size:60px 60px;
   }
-  .scanline {
-    position:absolute; left:0; right:0; height:3px; pointer-events:none;
-    background:linear-gradient(transparent, rgba(245,197,24,.12), transparent);
-    animation:scanline 8s linear infinite;
-  }
 
   .hero-badge {
     display:inline-flex; align-items:center; gap:8px;
@@ -46,27 +28,25 @@
     color:#F5C518; border-radius:999px; padding:5px 16px;
     font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
   }
-  .dot-live { width:7px; height:7px; border-radius:50%; background:#F5C518; animation:shimmer 1.5s ease-in-out infinite; }
+  .dot-live { width:7px; height:7px; border-radius:50%; background:#F5C518; }
 
   /* Ticker */
   .ticker-wrap { overflow:hidden; background:#F5C518; padding:11px 0; }
-  .ticker-inner { display:flex; width:max-content; animation:ticker 20s linear infinite; }
+  .ticker-inner { display:flex; width:max-content; }
   .ticker-inner span { white-space:nowrap; padding:0 2rem; font-size:.75rem; font-weight:800; letter-spacing:.08em; color:#000; text-transform:uppercase; }
 
   /* Product cards */
   .prod-card {
     position:relative; border-radius:20px; overflow:hidden;
     border:1px solid #1e1e1e; background:#111;
-    transition:transform .35s cubic-bezier(.22,1,.36,1), border-color .3s, box-shadow .3s;
+    transition:border-color .3s, box-shadow .3s;
   }
   .prod-card:hover {
-    transform:translateY(-10px) scale(1.015);
     border-color:rgba(245,197,24,.45);
     box-shadow:0 24px 60px rgba(245,197,24,.12), 0 4px 20px rgba(0,0,0,.7);
   }
   .prod-img { position:relative; overflow:hidden; height:200px; }
-  .prod-img img { width:100%; height:100%; object-fit:cover; transition:transform .5s cubic-bezier(.22,1,.36,1); }
-  .prod-card:hover .prod-img img { transform:scale(1.08); }
+  .prod-img img { width:100%; height:100%; object-fit:cover; }
   .prod-img-overlay { position:absolute; inset:0; background:linear-gradient(to bottom,transparent 45%,rgba(0,0,0,.75) 100%); }
   .badge-cat {
     position:absolute; top:10px; left:10px;
@@ -92,11 +72,10 @@
     flex:1; padding:7px 0; border-radius:10px;
     background:#F5C518; color:#000; border:none;
     font-size:.76rem; font-weight:800; cursor:pointer;
-    transition:opacity .2s, transform .15s;
+    transition:opacity .2s;
     display:block; text-align:center; text-decoration:none;
   }
-  .btn-add:hover { opacity:.85; transform:scale(1.04); }
-  .btn-add form { flex:1; }
+  .btn-add:hover { opacity:.85; }
 
   /* Sections */
   .sec-label { display:inline-block; font-size:.65rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:#F5C518; border-left:3px solid #F5C518; padding-left:10px; margin-bottom:12px; }
@@ -105,10 +84,10 @@
   /* Feature cards */
   .feat-card {
     padding:1.8rem; border-radius:20px; border:1px solid #1a1a1a; background:#0d0d0d;
-    transition:border-color .25s, transform .3s;
+    transition:border-color .25s;
   }
-  .feat-card:hover { border-color:rgba(245,197,24,.3); transform:translateY(-5px); }
-  .feat-icon { font-size:2rem; margin-bottom:.9rem; display:block; animation:floatY 3.5s ease-in-out infinite; }
+  .feat-card:hover { border-color:rgba(245,197,24,.3); }
+  .feat-icon { font-size:2rem; margin-bottom:.9rem; display:block; }
 
   /* CTA banner */
   .cta-band {
@@ -116,62 +95,45 @@
     padding:3.5rem 3rem;
     display:flex; align-items:center; justify-content:space-between; gap:2rem; flex-wrap:wrap;
   }
-  .cta-band::before {
-    content:''; position:absolute; top:-60px; right:-60px;
-    width:250px; height:250px; border-radius:50%; background:rgba(0,0,0,.07);
-    animation:rotateSlow 25s linear infinite;
-  }
-  .cta-band::after {
-    content:''; position:absolute; bottom:-80px; right:100px;
-    width:300px; height:300px; border-radius:50%; background:rgba(0,0,0,.05);
-  }
 
   /* Mosaic hero cards */
   .mosaic-card {
     border-radius:18px; overflow:hidden; border:1px solid #1e1e1e;
-    animation:glowPulse 4s ease-in-out infinite alternate;
   }
-  .mosaic-card:nth-child(2) { animation-delay:1.3s; }
-  .mosaic-card:nth-child(3) { animation-delay:2.5s; }
-
-  /* Scroll reveal */
-  .sr { opacity:0; transform:translateY(28px); transition:opacity .65s ease, transform .65s ease; }
-  .sr.vis { opacity:1; transform:translateY(0); }
 </style>
 
 <!-- ══════════════ HERO ══════════════ -->
 <section class="relative flex flex-col justify-center" style="min-height:95vh; padding:0 1.5rem;">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
-  <div class="scanline"></div>
 
   <div class="relative z-10 max-w-6xl mx-auto w-full py-28 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
     <!-- Texte gauche -->
     <div>
-      <div class="hero-badge anim-1">
+      <div class="hero-badge">
         <span class="dot-live"></span>
         Nouveau · Collection 2026
       </div>
 
-      <h1 class="anim-2 font-black tracking-tighter mt-6"
+      <h1 class="font-black tracking-tighter mt-6"
           style="font-size:clamp(3rem,7vw,5.5rem); line-height:1.0;">
         Votre boutique<br/>
         <em style="color:#F5C518; font-style:normal;">premium</em><br/>
         <span style="color:#333;">en ligne.</span>
       </h1>
 
-      <p class="anim-3 mt-6 text-base leading-relaxed" style="color:#9ca3af; max-width:440px;">
+      <p class="mt-6 text-base leading-relaxed" style="color:#9ca3af; max-width:440px;">
         Des produits soigneusement sélectionnés, des prix imbattables.
         Commandez en 2 minutes, recevez en 24h.
       </p>
 
-      <div class="anim-4 flex flex-wrap gap-3 mt-8">
+      <div class="flex flex-wrap gap-3 mt-8">
         <a th:href="@{/produits}"
            class="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-black text-base"
-           style="background:#F5C518; box-shadow:0 0 32px rgba(245,197,24,.35); transition:transform .2s, box-shadow .2s;"
-           onmouseover="this.style.transform='scale(1.05)'"
-           onmouseout="this.style.transform='scale(1)'">
+           style="background:#F5C518; box-shadow:0 0 32px rgba(245,197,24,.35); transition:opacity .2s;"
+           onmouseover="this.style.opacity='.85'"
+           onmouseout="this.style.opacity='1'">
           Explorer le catalogue
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -196,7 +158,7 @@
       </div>
 
       <!-- Stats -->
-      <div class="anim-4 flex gap-8 mt-12 pt-8" style="border-top:1px solid #1a1a1a;">
+      <div class="flex gap-8 mt-12 pt-8" style="border-top:1px solid #1a1a1a;">
         <div>
           <p class="text-2xl font-black" style="color:#F5C518;"
              th:text="${#lists.size(produits)} + '+'">—</p>
@@ -217,8 +179,6 @@
 
     <!-- Mosaïque produits (3 premières) -->
     <div class="hidden lg:grid grid-cols-2 gap-4 relative">
-      <div class="absolute pointer-events-none"
-           style="inset:-60px;background:radial-gradient(circle,rgba(245,197,24,.12) 0%,transparent 65%);border-radius:50%;"></div>
       <div th:each="produit, iter : ${produits}"
            th:if="${iter.index < 3}"
            class="mosaic-card"
@@ -238,21 +198,11 @@
       </div>
     </div>
   </div>
-
-  <!-- Scroll indicator -->
-  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1" style="opacity:.35;">
-    <span style="font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:#666;">Défiler</span>
-    <div style="width:1px;height:36px;background:linear-gradient(to bottom,#F5C518,transparent);"></div>
-  </div>
 </section>
 
 <!-- ══════════════ TICKER ══════════════ -->
 <div class="ticker-wrap">
   <div class="ticker-inner">
-    <span>🚀 Livraison express 24h</span><span>★ Produits premium</span>
-    <span>🔒 Paiement sécurisé</span><span>✨ Nouveautés chaque semaine</span>
-    <span>📦 Stock toujours disponible</span><span>🎯 Prix imbattables</span>
-    <span>💬 Support 7j/7</span><span>🇲🇦 Livraison dans tout le Maroc</span>
     <span>🚀 Livraison express 24h</span><span>★ Produits premium</span>
     <span>🔒 Paiement sécurisé</span><span>✨ Nouveautés chaque semaine</span>
     <span>📦 Stock toujours disponible</span><span>🎯 Prix imbattables</span>
@@ -269,7 +219,7 @@
 </div>
 
 <!-- ══════════════ FEATURES ══════════════ -->
-<section class="max-w-6xl mx-auto px-6 py-20 sr">
+<section class="max-w-6xl mx-auto px-6 py-20">
   <p class="sec-label">Nos engagements</p>
   <h2 class="sec-title">Pourquoi choisir<br/><span style="color:#F5C518;">AQL Commerce ?</span></h2>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -279,17 +229,17 @@
       <p class="text-sm" style="color:#5a5a5a;">Commandez avant 18h, recevez le lendemain. Partout au Maroc.</p>
     </div>
     <div class="feat-card">
-      <span class="feat-icon" style="animation-delay:.8s">🛡️</span>
+      <span class="feat-icon">🛡️</span>
       <h3 class="font-bold text-base mb-2">Qualité garantie</h3>
       <p class="text-sm" style="color:#5a5a5a;">Chaque article est inspecté avant expédition. Retour 30 jours.</p>
     </div>
     <div class="feat-card">
-      <span class="feat-icon" style="animation-delay:1.6s">💳</span>
+      <span class="feat-icon">💳</span>
       <h3 class="font-bold text-base mb-2">Paiement sécurisé</h3>
       <p class="text-sm" style="color:#5a5a5a;">Transactions chiffrées SSL. Vos données sont protégées.</p>
     </div>
     <div class="feat-card">
-      <span class="feat-icon" style="animation-delay:2.4s">🎧</span>
+      <span class="feat-icon">🎧</span>
       <h3 class="font-bold text-base mb-2">Support 7j/7</h3>
       <p class="text-sm" style="color:#5a5a5a;">Notre équipe vous répond en moins d'une heure, chaque jour.</p>
     </div>
@@ -297,7 +247,7 @@
 </section>
 
 <!-- ══════════════ CATALOGUE ══════════════ -->
-<section class="max-w-6xl mx-auto px-6 pb-24 sr">
+<section class="max-w-6xl mx-auto px-6 pb-24">
   <div class="flex items-end justify-between mb-8 flex-wrap gap-4">
     <div>
       <p class="sec-label">Catalogue</p>
@@ -357,7 +307,7 @@
 </section>
 
 <!-- ══════════════ CTA ══════════════ -->
-<section class="max-w-6xl mx-auto px-6 pb-28 sr">
+<section class="max-w-6xl mx-auto px-6 pb-28">
   <sec:authorize access="!isAuthenticated()">
     <div class="cta-band">
       <div class="relative z-10">
@@ -374,9 +324,9 @@
       <div class="relative z-10 flex gap-3 flex-wrap">
         <a th:href="@{/auth/register}"
            class="inline-block px-7 py-3.5 rounded-xl font-black text-base"
-           style="background:#000;color:#F5C518;transition:transform .2s;"
-           onmouseover="this.style.transform='scale(1.05)'"
-           onmouseout="this.style.transform='scale(1)'">
+           style="background:#000;color:#F5C518;transition:opacity .2s;"
+           onmouseover="this.style.opacity='.85'"
+           onmouseout="this.style.opacity='1'">
           S'inscrire gratuitement →
         </a>
         <a th:href="@{/auth/login}"
@@ -403,9 +353,9 @@
       <div class="relative z-10 flex gap-3 flex-wrap">
         <a th:href="@{/produits}"
            class="inline-block px-7 py-3.5 rounded-xl font-black text-base"
-           style="background:#000;color:#F5C518;transition:transform .2s;"
-           onmouseover="this.style.transform='scale(1.05)'"
-           onmouseout="this.style.transform='scale(1)'">
+           style="background:#000;color:#F5C518;transition:opacity .2s;"
+           onmouseover="this.style.opacity='.85'"
+           onmouseout="this.style.opacity='1'">
           Explorer le catalogue →
         </a>
         <a th:href="@{/panier}"
@@ -439,13 +389,5 @@
 </footer>
 
 <script th:src="@{/js/main.js}"></script>
-<script>
-  // Scroll reveal
-  const obs = new IntersectionObserver(
-    (entries) => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); }),
-    { threshold: 0.08 }
-  );
-  document.querySelectorAll('.sr').forEach(el => obs.observe(el));
-</script>
 </body>
 </html>
