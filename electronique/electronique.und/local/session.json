@@ -1,0 +1,389 @@
+{
+    "Session": "default",
+    "Sessions": {
+        "default": {
+            "SessionData": {
+                "1_1280x720": {
+                    "AnalysisLog": {
+                        "Dock Area": 8,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                        ]
+                    },
+                    "DockWidgets": {
+                        "FloatingWidgetOrder": [
+                        ],
+                        "OpenWindows": {
+                            "00ProjectOverviewWidget": {
+                                "height": 262,
+                                "width": 250
+                            },
+                            "01EntityFilter": {
+                                "height": 284,
+                                "width": 250
+                            },
+                            "02InfoBrowserWidget_0": {
+                                "height": 273,
+                                "width": 270
+                            }
+                        },
+                        "TabGroupFrontWidgets": [
+                            "ProjectOverviewWidget"
+                        ]
+                    },
+                    "EntityFilter": {
+                        "Dock Area": 1,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                            "ProjectOverviewWidget"
+                        ]
+                    },
+                    "InfoBrowserWidget_0": {
+                        "Dock Area": 1,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                        ]
+                    },
+                    "IssueBrowser": {
+                        "Dock Area": 8,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                        ]
+                    },
+                    "ProjectOverviewWidget": {
+                        "Dock Area": 1,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                            "EntityFilter"
+                        ]
+                    }
+                },
+                "1_1536x864": {
+                    "DockWidgets": {
+                        "FloatingWidgetOrder": [
+                        ],
+                        "OpenWindows": {
+                            "00ProjectOverviewWidget": {
+                                "height": 333,
+                                "width": 250
+                            },
+                            "01EntityFilter": {
+                                "height": 355,
+                                "width": 250
+                            },
+                            "02InfoBrowserWidget_0": {
+                                "height": 346,
+                                "width": 270
+                            }
+                        },
+                        "TabGroupFrontWidgets": [
+                            "ProjectOverviewWidget"
+                        ]
+                    },
+                    "EntityFilter": {
+                        "Dock Area": 1,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                            "ProjectOverviewWidget"
+                        ]
+                    },
+                    "InfoBrowserWidget_0": {
+                        "Dock Area": 1,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                        ]
+                    },
+                    "ProjectOverviewWidget": {
+                        "Dock Area": 1,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                            "EntityFilter"
+                        ]
+                    }
+                },
+                "1_1920x1080": {
+                    "AnalysisLog": {
+                        "Dock Area": 8,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                        ]
+                    },
+                    "DockWidgets": {
+                        "FloatingWidgetOrder": [
+                        ],
+                        "OpenWindows": {
+                            "00AnalysisLog": {
+                                "height": 240,
+                                "width": 1646
+                            },
+                            "01ProjectOverviewWidget": {
+                                "height": 438,
+                                "width": 250
+                            },
+                            "02EntityFilter": {
+                                "height": 460,
+                                "width": 250
+                            },
+                            "03InfoBrowserWidget_0": {
+                                "height": 457,
+                                "width": 270
+                            }
+                        },
+                        "TabGroupFrontWidgets": [
+                            "ProjectOverviewWidget"
+                        ]
+                    },
+                    "EntityFilter": {
+                        "Dock Area": 1,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                            "ProjectOverviewWidget"
+                        ]
+                    },
+                    "InfoBrowserWidget_0": {
+                        "Dock Area": 1,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                        ]
+                    },
+                    "IssueBrowser": {
+                        "Dock Area": 8,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                        ]
+                    },
+                    "Locator": {
+                        "Dock Area": 8,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                        ]
+                    },
+                    "ProjectOverviewWidget": {
+                        "Dock Area": 1,
+                        "Dock In Drawer Mode": false,
+                        "Dock Is Floating": false,
+                        "Dock Tab Group": [
+                            "EntityFilter"
+                        ]
+                    }
+                },
+                "EditorWindowList": [
+                    "./src/main/java/Electronique/ElectroniqueApplication.java",
+                    "./src/test/java/com/commerce/service/AuthServiceTest.java",
+                    "./src/main/java/com/commerce/controller/AdminController.java"
+                ],
+                "EditorWindowSetting": {
+                    "1f5c1dc0a59eb4d28c4cb852939bd682": {
+                        "anchor": {
+                            "line": 6,
+                            "offset": 0
+                        },
+                        "caret": {
+                            "line": 6,
+                            "offset": 0
+                        },
+                        "container": 1,
+                        "height": 560,
+                        "hscroll": 0,
+                        "isMaximized": false,
+                        "vscroll": 0,
+                        "width": 1010,
+                        "x": 0,
+                        "y": 0
+                    },
+                    "75a880c4f517479c1c6a120f70bf7be3": {
+                        "anchor": {
+                            "line": 13,
+                            "offset": 0
+                        },
+                        "caret": {
+                            "line": 13,
+                            "offset": 0
+                        },
+                        "container": 1,
+                        "height": 560,
+                        "hscroll": 0,
+                        "isMaximized": false,
+                        "vscroll": 0,
+                        "width": 1010,
+                        "x": 0,
+                        "y": 0
+                    },
+                    "aa810fc6b82c0831e4ee884d242538fb": {
+                        "anchor": {
+                            "line": 5,
+                            "offset": 0
+                        },
+                        "caret": {
+                            "line": 5,
+                            "offset": 0
+                        },
+                        "container": 1,
+                        "height": 488,
+                        "hscroll": 0,
+                        "isMaximized": false,
+                        "vscroll": 0,
+                        "width": 1010,
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                "EntityFilter": {
+                    "LastEntityFilterUsed": "All Entities"
+                },
+                "GraphicFilterSettings": {
+                    "Enabled": false
+                },
+                "InfoBrowserWindowManager": {
+                    "InfoBrowserSyncKinds": {
+                        "0": [
+                            "Entities",
+                            "Architectures",
+                            "Commits",
+                            "Violations"
+                        ]
+                    }
+                },
+                "LastAccessedPid": "19756",
+                "LastAccessedPriorPid": "19756",
+                "LastDisplayGroup": "1_1536x864",
+                "MaintainEditorHistory": {
+                    "FileRanges": {
+                        "0": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/main/java/Electronique/ElectroniqueApplication.java",
+                            "LineBegin": 3,
+                            "LineEnd": 3
+                        },
+                        "1": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/main/java/Electronique/ElectroniqueApplication.java",
+                            "LineBegin": 4,
+                            "LineEnd": 4
+                        },
+                        "10": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/main/java/Electronique/ElectroniqueApplication.java",
+                            "LineBegin": 7,
+                            "LineEnd": 7
+                        },
+                        "11": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/test/java/com/commerce/service/AuthServiceTest.java",
+                            "LineBegin": 14,
+                            "LineEnd": 14
+                        },
+                        "12": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/main/java/com/commerce/controller/AdminController.java",
+                            "LineBegin": 6,
+                            "LineEnd": 6
+                        },
+                        "2": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/main/java/Electronique/ElectroniqueApplication.java",
+                            "LineBegin": 3,
+                            "LineEnd": 3
+                        },
+                        "3": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/main/java/Electronique/ElectroniqueApplication.java",
+                            "LineBegin": 5,
+                            "LineEnd": 5
+                        },
+                        "4": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/main/java/Electronique/ElectroniqueApplication.java",
+                            "LineBegin": 6,
+                            "LineEnd": 6
+                        },
+                        "5": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/main/java/Electronique/ElectroniqueApplication.java",
+                            "LineBegin": 7,
+                            "LineEnd": 7
+                        },
+                        "6": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/test/java/com/commerce/service/AuthServiceTest.java",
+                            "LineBegin": 1,
+                            "LineEnd": 1
+                        },
+                        "7": {
+                            "ColumnBegin": 34,
+                            "ColumnEnd": 34,
+                            "FilePath": "./src/test/java/com/commerce/service/AuthServiceTest.java",
+                            "LineBegin": 9,
+                            "LineEnd": 9
+                        },
+                        "8": {
+                            "ColumnBegin": 86,
+                            "ColumnEnd": 60,
+                            "FilePath": "./src/test/java/com/commerce/service/AuthServiceTest.java",
+                            "LineBegin": 50,
+                            "LineEnd": 74
+                        },
+                        "9": {
+                            "ColumnBegin": 0,
+                            "ColumnEnd": 0,
+                            "FilePath": "./src/test/java/com/commerce/service/AuthServiceTest.java",
+                            "LineBegin": 14,
+                            "LineEnd": 14
+                        },
+                        "size": 13
+                    },
+                    "index": 12
+                },
+                "MiscSaveStates": {
+                    "entitySelected": "@lcom.commerce.security.CustomUserDetailsService.loadUserByUsername.(lambda_expr_1)@p@lcom.commerce.security.CustomUserDetailsService.loadUserByUsername@kj1com.commerce.security.CustomUserDetailsService.loadUserByUsernamejava.lang.String@f./src/main/java/com/commerce/security/CustomUserDetailsService.java",
+                    "ib": "entity:||:@l./src/main/java/com/commerce/service/PanierService.java",
+                    "projectOverviewCharts": "true",
+                    "projectOverviewChartsPosition": 1,
+                    "projectOverviewChartsSelected": "true",
+                    "projectOverviewChartsWorkspace": 0,
+                    "selection": "AdminController.java"
+                },
+                "ProjectUI": {
+                    "projectviewcuritem": "bin"
+                },
+                "SplitWorkspace1SelectedTab": "",
+                "SplitWorkspace1Tabs": [
+                    "./src/main/java/Electronique/ElectroniqueApplication.java",
+                    "./src/test/java/com/commerce/service/AuthServiceTest.java",
+                    "./src/main/java/com/commerce/controller/AdminController.java"
+                ],
+                "SplittableWorkspace": {
+                    "active workspace": 0,
+                    "primary ws size": 1264,
+                    "split orientation": -1
+                },
+                "violationbrowser": {
+                    "filter": ""
+                }
+            }
+        }
+    }
+}
