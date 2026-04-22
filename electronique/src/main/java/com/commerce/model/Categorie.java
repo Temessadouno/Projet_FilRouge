@@ -14,11 +14,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+//Cette classe permet de classer les produit par catégorie, pour faciliter les trie
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity
 @Table(name = "categorie")
@@ -46,9 +48,12 @@ public class Categorie {
 	    protected void onCreate() {
 	        createdAt = LocalDateTime.now();
 	    }
+	    
+	    @Transient  // Ne pas persister en base
+	    private int nbProduits;
 
 
-
+       //La methode qui rend une catégorie avec toutes son nom et son identifient
 	    @Override
 	    public String toString() {
 	        return "Categorie{id=" + id + ", nom='" + nom + "'}";

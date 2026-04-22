@@ -28,4 +28,12 @@ public class AuthService {
         return utilisateurRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
     }
+    
+    public Utilisateur findByResetToken(String token) {
+        return utilisateurRepository.findByResetToken(token).orElse(null);
+    }
+
+    public void updateUser(Utilisateur user) {
+        utilisateurRepository.save(user);
+    }
 }

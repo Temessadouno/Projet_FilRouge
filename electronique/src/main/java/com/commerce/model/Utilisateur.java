@@ -91,5 +91,15 @@ public class Utilisateur {
 		this.role=rclient;
 		
 	}
+	
+	// Dans Utilisateur.java
+
+	@Column(name = "reset_token", length = 255)
+	private String resetToken;
+
+	@Column(name = "reset_token_expiry")
+	private LocalDateTime resetTokenExpiry;
+
+	// Getters et Setters
 
 }

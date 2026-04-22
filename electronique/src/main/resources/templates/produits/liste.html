@@ -1,159 +1,323 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      data-theme="dark">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/layout :: head}"></head>
-<body style="background: var(--bg); color: var(--text);">
+<body class="bg-gray-900 text-white font-['Inter',system-ui]">
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-<style>
-  .cat-pill {
-    padding: 5px 14px; border-radius: 999px; font-size: .7rem; font-weight: 600;
-    border: 1px solid var(--border2); color: var(--muted); background: transparent;
-    cursor: pointer; transition: all .15s; text-decoration: none; display: inline-block;
-  }
-  .cat-pill:hover { border-color: rgba(37,99,235,.4); color: #3b82f6; }
-  .cat-active { background: var(--accent) !important; border-color: var(--accent) !important; color: #fff !important; }
-
-  .prod-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; overflow: hidden;
-    transition: border-color .2s, transform .2s;
-  }
-  .prod-card:hover { border-color: rgba(37,99,235,.35); transform: translateY(-2px); }
-  .prod-img { height: 180px; overflow: hidden; position: relative; background: var(--card); }
-  .prod-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
-  .prod-card:hover .prod-img img { transform: scale(1.04); }
-  .prod-cat-badge {
-    position: absolute; top: 8px; left: 8px;
-    background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
-    color: #3b82f6; font-size: .6rem; font-weight: 700;
-    padding: 3px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: .06em;
-  }
-  .rupture-badge {
-    position: absolute; top: 8px; right: 8px;
-    background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3);
-    color: #ef4444; font-size: .6rem; font-weight: 800;
-    padding: 3px 9px; border-radius: 999px;
-  }
-  .btn-detail {
-    flex: 1; text-align: center; padding: 6px 0; border-radius: 8px;
-    border: 1px solid var(--border2); font-size: .7rem; font-weight: 600;
-    color: var(--muted); text-decoration: none; transition: border-color .15s, color .15s;
-  }
-  .btn-detail:hover { border-color: rgba(37,99,235,.4); color: #3b82f6; }
-  .btn-add {
-    flex: 1; padding: 6px 0; border-radius: 8px;
-    background: var(--accent); color: #fff; border: none;
-    font-size: .7rem; font-weight: 700; cursor: pointer;
-    transition: opacity .15s; display: block; text-align: center; text-decoration: none;
-  }
-  .btn-add:hover { opacity: .82; }
-</style>
-
-<main class="max-w-5xl mx-auto px-6 py-8">
-
-  <!-- Flash -->
-  <div th:if="${success}"
-       class="flash-msg mb-4 px-4 py-3 rounded-xl text-sm font-medium"
-       style="background: #0f2a1a; color: #4ade80; border: 1px solid #166534;"
+<!-- ============================================================ -->
+<!-- MAIN CONTENT AVEC ASIDE FILTRES GROUPÉS PLIABLES -->
+<!-- ============================================================ -->
+<main class=" mx-auto px-1 sm:px-2 lg:px-3 py-4">
+  
+  <!-- Flash Messages -->
+  <div th:if="${success}" 
+       class="mb-6 px-4 py-3 rounded-xl text-sm font-medium  text-green-700 border border-green-200"
        th:text="${success}"></div>
-  <div th:if="${erreur}"
-       class="flash-msg mb-4 px-4 py-3 rounded-xl text-sm font-medium"
-       style="background: #2a0f0f; color: #f87171; border: 1px solid #991b1b;"
+  <div th:if="${erreur}" 
+       class="mb-6 px-4 py-3 rounded-xl text-sm font-medium  text-red-700 border border-red-200"
        th:text="${erreur}"></div>
 
-  <!-- Header -->
-  <div class="mb-6">
-    <h1 class="text-2xl font-extrabold text-white tracking-tight">Catalogue</h1>
-    <p class="text-xs mt-1" style="color: var(--muted);"
+  <!-- En-tête -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">Notre Catalogue</h1>
+    <p class="text-sm text-gray-500 mt-1"
        th:text="${#lists.size(produits)} + ' produit(s) trouvé(s)'"></p>
   </div>
 
-  <!-- Recherche -->
-  <form th:action="@{/produits}" method="get" class="flex gap-2 mb-5">
-    <input type="text" name="q" th:value="${q}"
-           placeholder="Rechercher un produit, une marque..."
-           class="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none transition"
-           style="background: var(--input); border: 1px solid var(--border2); color: var(--text);"/>
-    <button type="submit"
-            class="px-5 py-2.5 rounded-xl font-bold text-white text-sm transition-opacity hover:opacity-80"
-            style="background: var(--accent);">
-      Rechercher
-    </button>
-  </form>
+  <!-- Layout 2 colonnes : ASIDE (filtres) + MAIN (produits) -->
+  <div class="flex flex-col lg:flex-row gap-8">
+    
+    <!-- ======================================================== -->
+    <!-- ASIDE GAUCHE : FILTRES GROUPÉS PLIABLES -->
+    <!-- ======================================================== -->
+    <aside class="lg:w-1/4">
+      <div class="sticky top-24 rounded-2xl  border border-gray-200 p-5 shadow-sm">
+        
+        <!-- Titre filtres -->
+        <div class="flex items-center justify-between mb-5 pb-3 border-b border-gray-200">
+          <h2 class="text-sm font-bold uppercase tracking-wide text-gray-700 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+            </svg>
+            Filtres
+          </h2>
+          <a th:href="@{/produits}" 
+             class="text-xs text-blue-600 hover:text-blue-700 transition-colors flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            Réinitialiser
+          </a>
+        </div>
 
-  <!-- Filtres -->
-  <div class="flex flex-wrap gap-2 mb-6">
-    <a th:href="@{/produits}"
-       class="cat-pill"
-       th:classappend="${categorieId == null ? ' cat-active' : ''}">
-      Tous les produits
-    </a>
-    <a th:each="cat : ${categories}"
-       th:href="@{/produits(categorieId=${cat.id})}"
-       th:text="${cat.nom}"
-       class="cat-pill"
-       th:classappend="${categorieId == cat.id ? ' cat-active' : ''}"></a>
-  </div>
+        <!-- GROUPE 1 : Recherche -->
+        <div class="mb-5">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleGroup('searchGroup')">
+            <label class="text-xs font-semibold text-gray-500 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              Recherche
+            </label>
+            <svg id="searchGroupIcon" class="w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+          <div id="searchGroupContent" class="mt-3">
+            <form th:action="@{/produits}" method="get" class="flex gap-2">
+              <input type="text" 
+                     name="q" 
+                     th:value="${q}"
+                     placeholder="Nom ou marque..."
+                     class="flex-1 px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"/>
+              <button type="submit"
+                      class="px-4 py-2 rounded-lg font-medium text-sm text-white bg-blue-600 hover:bg-blue-700 transition-all">
+                OK
+              </button>
+            </form>
+          </div>
+        </div>
 
-  <!-- Grille produits -->
-  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-    <div th:each="produit : ${produits}" class="prod-card">
+        <!-- GROUPE 2 : Catégories -->
+        <div class="mb-5">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleGroup('categoriesGroup')">
+            <label class="text-xs font-semibold text-gray-500 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+              </svg>
+              Catégories
+            </label>
+            <svg id="categoriesGroupIcon" class="w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+          <div id="categoriesGroupContent" class="mt-3 space-y-2">
+            <a th:href="@{/produits}"
+               class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all"
+               th:classappend="${categorieId == null} ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'">
+              <span>Tous les produits</span>
+              <span th:text="${totalProduits != null ? totalProduits : 0}" 
+                    class="text-xs text-gray-400">0</span>
+            </a>
+            <a th:each="cat : ${categories}"
+               th:href="@{/produits(categorieId=${cat.id})}"
+               class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all"
+               th:classappend="${categorieId == cat.id} ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'">
+              <span th:text="${cat.nom}"></span>
+              <span th:text="${cat.nbProduits}" class="text-xs text-gray-400">0</span>
+            </a>
+          </div>
+        </div>
 
-      <div class="prod-img">
-        <img th:src="${produit.imageUrl}" th:alt="${produit.nom}"
-             onerror="this.src='/images/placeholder.png'"/>
-        <span class="prod-cat-badge" th:text="${produit.categorie.nom}"></span>
-        <span th:unless="${produit.enStock}" class="rupture-badge">Rupture</span>
+        <!-- GROUPE 3 : Prix -->
+        <div class="mb-5">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleGroup('priceGroup')">
+            <label class="text-xs font-semibold text-gray-500 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Prix
+            </label>
+            <svg id="priceGroupIcon" class="w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+          <div id="priceGroupContent" class="mt-3 space-y-2">
+            <a th:href="@{/produits(prixMin=0, prixMax=200)}"
+               class="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-all">
+              <span>Moins de 200 MAD</span>
+            </a>
+            <a th:href="@{/produits(prixMin=200, prixMax=500)}"
+               class="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-all">
+              <span>200 - 500 MAD</span>
+            </a>
+            <a th:href="@{/produits(prixMin=500, prixMax=1000)}"
+               class="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-all">
+              <span>500 - 1000 MAD</span>
+            </a>
+            <a th:href="@{/produits(prixMin=1000)}"
+               class="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-all">
+              <span>Plus de 1000 MAD</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- GROUPE 4 : Disponibilité -->
+        <div class="mb-5">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleGroup('stockGroup')">
+            <label class="text-xs font-semibold text-gray-500 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+              </svg>
+              Disponibilité
+            </label>
+            <svg id="stockGroupIcon" class="w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+          <div id="stockGroupContent" class="mt-3 space-y-2">
+            <a th:href="@{/produits(enStock=true)}"
+               class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-all">
+              <span class="w-2 h-2 rounded-full bg-green-500"></span>
+              En stock uniquement
+            </a>
+            <a th:href="@{/produits(enStock=false)}"
+               class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-all">
+              <span class="w-2 h-2 rounded-full bg-red-500"></span>
+              Rupture de stock
+            </a>
+          </div>
+        </div>
+
+        <!-- Bouton réinitialiser -->
+        <button onclick="window.location.href='/produits'"
+                class="w-full mt-4 px-4 py-2.5 rounded-xl font-medium text-sm text-gray-600 border border-gray-300 hover:border-gray-400 hover:text-gray-800 transition-all duration-200 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          Effacer tous les filtres
+        </button>
+      </div>
+    </aside>
+
+    <!-- ======================================================== -->
+    <!-- MAIN DROITE : GRILLE PRODUITS -->
+    <!-- ======================================================== -->
+    <div class="lg:w-3/4">
+      
+      <!-- Barre d'outils -->
+      <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+        <p class="text-sm text-gray-500 flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          Affichage de <span th:text="${#lists.size(produits)}"></span> produits
+        </p>
       </div>
 
-      <div class="p-3">
-        <p class="text-sm font-semibold text-white leading-tight mb-0.5" th:text="${produit.nom}"></p>
-        <p class="text-xs mb-3" style="color: var(--muted);" th:text="${produit.marque}"></p>
-
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-base font-extrabold" style="color: #3b82f6;"
-                th:text="${#numbers.formatDecimal(produit.prix,1,2)} + ' MAD'"></span>
-          <span th:if="${produit.enStock}" class="text-xs font-semibold" style="color: #22c55e;">En stock</span>
-          <span th:unless="${produit.enStock}" class="text-xs font-semibold" style="color: #ef4444;">Rupture</span>
+      <!-- Grille produits -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div th:each="produit : ${produits}" 
+             class="product-card group rounded-2xl border border-gray-200 bg-white overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+          
+          <!-- Image -->
+          <div class="relative h-48 overflow-hidden bg-gray-100">
+            <img th:src="${produit.imageUrl}" 
+                 th:alt="${produit.nom}"
+                 onerror="this.src='/images/placeholder.png'"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+            <!-- Badge catégorie -->
+            <span class="absolute top-3 left-3 text-[10px] font-bold px-2 py-1 rounded-full bg-black/60 text-white backdrop-blur-sm"
+                  th:text="${produit.categorie.nom}"></span>
+            <!-- Badge stock -->
+            <span th:if="${produit.enStock}" 
+                  class="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 rounded-full bg-green-500 text-white">
+              En stock
+            </span>
+            <span th:unless="${produit.enStock}" 
+                  class="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 rounded-full bg-red-500 text-white">
+              Rupture
+            </span>
+          </div>
+          
+          <!-- Infos -->
+          <div class="p-4">
+            <h3 class="text-base font-bold text-gray-900 truncate" th:text="${produit.nom}"></h3>
+            <p class="text-xs text-gray-500 mt-0.5" th:text="${produit.marque}"></p>
+            
+            <div class="flex items-center justify-between mt-3 mb-4">
+              <span class="text-xl font-extrabold text-blue-600" 
+                    th:text="${#numbers.formatDecimal(produit.prix,1,2)} + ' MAD'"></span>
+              <div class="flex items-center gap-1">
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <span class="text-xs text-gray-500">4.8</span>
+              </div>
+            </div>
+            
+            <!-- Boutons (sans connexion) -->
+            <div class="flex gap-2">
+              <a th:href="@{/produits/{id}(id=${produit.id})}" 
+                 class="flex-1 text-center px-3 py-2 rounded-xl text-sm font-medium text-gray-600 border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all duration-200">
+                Détail
+              </a>
+             <div  th:if="${session.estConnecter == true and session.userRole == 'CLIENT' } " >
+				<form th:action="@{/panier/ajouter}" method="post" th:if="${produit.enStock}" class="flex-1">
+				  <input type="hidden" name="produitId" th:value="${produit.id}"/>
+				  <input type="hidden" name="quantite" value="1"/>
+				  <button type="submit" 
+				          class="w-full text-center px-3 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200 shadow-sm">
+				    + Panier
+				  </button>
+				</form>
+				</div>
+              
+              <span th:unless="${produit.enStock}"
+                    class="flex-1 text-center px-3 py-2 rounded-xl text-sm font-medium text-gray-400 bg-gray-100 cursor-not-allowed">
+                Indisponible
+              </span>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="flex gap-2">
-          <a th:href="@{/produits/{id}(id=${produit.id})}" class="btn-detail">Détail</a>
-
-          <sec:authorize access="hasRole('CLIENT')">
-            <form th:action="@{/panier/ajouter}" method="post" th:if="${produit.enStock}" style="flex:1;">
-              <input type="hidden" name="produitId" th:value="${produit.id}"/>
-              <input type="hidden" name="quantite" value="1"/>
-              <button type="submit" class="btn-add" style="width:100%;">+ Panier</button>
-            </form>
-            <div th:unless="${produit.enStock}"
-                 class="flex-1 text-center py-1.5 rounded-lg text-xs font-semibold"
-                 style="background: rgba(255,255,255,.04); color: var(--muted);">Indisponible</div>
-          </sec:authorize>
-
-          <sec:authorize access="isAnonymous()">
-            <a th:href="@{/auth/login}" class="btn-add" style="flex:1;">Connexion</a>
-          </sec:authorize>
+      <!-- Message vide -->
+      <div th:if="${#lists.isEmpty(produits)}" 
+           class="text-center py-16 rounded-2xl bg-gray-50 border border-gray-200 mt-5">
+        <div class="w-20 h-20 rounded-full mx-auto mb-5 flex items-center justify-center bg-blue-100">
+          <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
         </div>
+        <p class="text-lg font-semibold text-gray-900 mb-2">Aucun produit trouvé</p>
+        <p class="text-sm text-gray-500 mb-5">Essayez de modifier vos critères de recherche</p>
+        <a th:href="@{/produits}" 
+           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm text-blue-600 border border-blue-200 hover:bg-blue-50 transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          Voir tous les produits
+        </a>
       </div>
     </div>
   </div>
-
-  <!-- Vide -->
-  <div th:if="${#lists.isEmpty(produits)}"
-       class="text-center py-24 rounded-2xl mt-2"
-       style="border: 1px dashed var(--border2);">
-    <p class="text-4xl mb-4">🔍</p>
-    <p class="text-base font-semibold text-white">Aucun produit trouvé.</p>
-    <a th:href="@{/produits}" class="mt-4 inline-block text-sm font-semibold" style="color: #3b82f6;">
-      ← Voir tous les produits
-    </a>
-  </div>
-
 </main>
 
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+
 <script th:src="@{/js/main.js}"></script>
+
+<!-- Script pour les groupes pliables - DOIT ÊTRE ICI -->
+<script type="text/javascript">
+  function toggleGroup(groupId) {
+    var content = document.getElementById(groupId + 'Content');
+    var icon = document.getElementById(groupId + 'Icon');
+    
+    if (content && icon) {
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.style.transform = 'rotate(0deg)';
+      } else {
+        content.style.display = 'none';
+        icon.style.transform = 'rotate(-90deg)';
+      }
+    }
+  }
+  
+  // S'assurer que tous les groupes sont ouverts par défaut
+  document.addEventListener('DOMContentLoaded', function() {
+    var groups = ['searchGroup', 'categoriesGroup', 'priceGroup', 'stockGroup'];
+    groups.forEach(function(group) {
+      var content = document.getElementById(group + 'Content');
+      if (content && content.style.display !== 'none') {
+        content.style.display = 'block';
+      }
+    });
+  });
+</script>
+
 </body>
 </html>

@@ -1,59 +1,200 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" data-theme="dark">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head}"></head>
-<body class="min-h-screen flex items-center justify-center px-4"
-      style="background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif;">
+<body class="min-h-screen flex flex-col bg-white text-gray-900 font-['Inter',system-ui]">
 
-<div class="w-full max-w-sm">
-  <!-- Logo -->
-  <div class="text-center mb-8">
-    <a href="/" class="text-3xl font-extrabold" style="color: var(--accent);">🛒 AQL Commerce</a>
-    <p class="text-sm mt-2" style="color: var(--muted);">Connectez-vous à votre compte</p>
-  </div>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-  <div class="rounded-2xl border p-8" style="background: var(--card); border-color: var(--border);">
-    <h1 class="text-2xl font-extrabold mb-6 text-center">Connexion</h1>
+<main class="flex-grow flex items-center justify-center px-4 py-8">
+  <div class="w-full max-w-8xl mx-auto">
 
-    <!-- Alertes -->
-    <div th:if="${erreur}" class="flash-msg mb-5 px-4 py-3 rounded-xl text-sm font-medium"
-         style="background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;" th:text="${erreur}"></div>
-    <div th:if="${message}" class="flash-msg mb-5 px-4 py-3 rounded-xl text-sm font-medium"
-         style="background: #dcfce7; color: #166534; border: 1px solid #86efac;" th:text="${message}"></div>
+    <div class="flex flex-col lg:flex-row gap-8 mx-8">
+      
+      <!-- COLONNE DROITE : FORMULAIRE DE CONNEXION -->
+      <div class="lg:w-1/2">
+        
+        <div class="text-center mb-6">
+          <a href="/" class="text-3xl font-extrabold tracking-tight text-gray-900">
+            NUALI-<span class="text-blue-600">Connexion</span>
+          </a>
+          <p class="text-sm mt-2 text-gray-500">Connectez-vous à votre compte</p>
+        </div>
 
-    <form th:action="@{/auth/login}" method="post" class="flex flex-col gap-4">
-      <div>
-        <label class="block text-xs font-semibold mb-1.5 uppercase tracking-wide"
-               style="color: var(--muted);">Email</label>
-        <input type="email" name="username" required placeholder="votre@email.com" autofocus
-               class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:ring-2 transition"
-               style="background: var(--input); border-color: var(--border); color: var(--text);"/>
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 shadow-sm m-8">
+          <h1 class="text-2xl font-bold mb-6 text-center text-gray-900">Connexion</h1>
+
+          <div th:if="${erreur}" 
+               class="mb-6 px-4 py-3 rounded-xl text-sm font-medium bg-red-50 text-red-700 border border-red-200"
+               th:text="${erreur}"></div>
+          <div th:if="${message}" 
+               class="mb-6 px-4 py-3 rounded-xl text-sm font-medium bg-green-50 text-green-700 border border-green-200"
+               th:text="${message}"></div>
+
+          <form th:action="@{/auth/login}" method="post" class="flex flex-col gap-6">
+            
+            <div>
+              <label class="block text-xs font-semibold mb-2 uppercase tracking-wide text-gray-500">
+                Adresse email
+              </label>
+              <input type="email" 
+                     name="email" 
+                     required 
+                     autocomplete="email"
+                     placeholder="exemple@email.com" 
+                     autofocus
+                     class="w-full px-4 py-3.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 placeholder:text-gray-400"/>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Mot de passe
+                </label>
+                <a th:href="@{/auth/forgot-password}" 
+                   class="text-xs text-blue-600 hover:text-blue-700 hover:underline transition-colors">
+                  Mot de passe oublié ?
+                </a>
+              </div>
+              <input type="password" 
+                     name="motDePasse" 
+                     required 
+                     autocomplete="current-password"
+                     placeholder="••••••••"
+                     class="w-full px-4 py-3.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 placeholder:text-gray-400"/>
+            </div>
+
+            <button type="submit"
+                    class="w-full py-3.5 rounded-xl font-bold text-white text-base mt-2 bg-blue-600 hover:bg-blue-700 hover:scale-[1.01] transition-all duration-200 shadow-sm">
+              Se connecter →
+            </button>
+          </form>
+
+          <p class="text-center text-sm mt-6 text-gray-500">
+            Pas encore de compte ?
+            <a th:href="@{/auth/register}" 
+               class="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors">
+              S'inscrire
+            </a>
+          </p>
+        </div>
       </div>
-      <div>
-        <label class="block text-xs font-semibold mb-1.5 uppercase tracking-wide"
-               style="color: var(--muted);">Mot de passe</label>
-        <input type="password" name="password" required placeholder="••••••••"
-               class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:ring-2 transition"
-               style="background: var(--input); border-color: var(--border); color: var(--text);"/>
+      
+      <!-- COLONNE GAUCHE : PUBLICITÉS -->
+      <div class="lg:w-1/2">
+        <div class="sticky top-24 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-6 overflow-hidden min-h-[450px] flex flex-col shadow-sm">
+          <div class="text-center mb-4">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+          </div>
+          <div id="adContainer" class="flex-1 flex flex-col items-center justify-center text-center transition-opacity duration-500">
+            <div id="adContent"></div>
+          </div>
+          <div class="flex justify-center gap-2 mt-6">
+            <div id="dot1" class="w-2 h-2 rounded-full bg-blue-600 transition-all"></div>
+            <div id="dot2" class="w-2 h-2 rounded-full bg-gray-300 transition-all"></div>
+            <div id="dot3" class="w-2 h-2 rounded-full bg-gray-300 transition-all"></div>
+            <div id="dot4" class="w-2 h-2 rounded-full bg-gray-300 transition-all"></div>
+          </div>
+        </div>
+        
+        <div class="mt-6 text-center">
+          <a href="/" class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors duration-200">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Retour à l'accueil
+          </a>
+        </div>
       </div>
-      <button type="submit"
-              class="w-full py-3 rounded-xl font-bold text-black text-base mt-2 transition hover:opacity-80 hover:scale-[1.01]"
-              style="background: var(--accent);">
-        Se connecter →
-      </button>
-    </form>
+    </div>
 
-    <p class="text-center text-sm mt-5" style="color: var(--muted);">
-      Pas encore de compte ?
-      <a th:href="@{/auth/register}" class="font-bold" style="color: var(--accent);">S'inscrire</a>
-    </p>
   </div>
+</main>
 
-  <div class="text-center mt-4">
-    <button onclick="toggleTheme()" class="text-xs hover:opacity-70 transition" style="color: var(--muted);">
-      ◑ Changer le thème
-    </button>
-  </div>
-</div>
+<script>
+  (function() {
+    const ads = [
+      { icon: "🚚", title: "Livraison Express 24h", description: "Recevez vos commandes le lendemain, partout au Maroc", color: "blue" },
+      { icon: "🔒", title: "Paiement 100% Sécurisé", description: "Vos données bancaires sont protégées par chiffrement SSL", color: "green" },
+      { icon: "🎁", title: "-10% sur votre première commande", description: "Code bienvenue : AQL10", color: "purple" },
+      { icon: "⭐", title: "Service Client 7j/7", description: "Une équipe à votre écoute pour vous assister", color: "orange" }
+    ];
+    
+    let currentAdIndex = 0;
+    let adInterval;
+    
+    function showAd(index) {
+      const ad = ads[index];
+      const adContent = document.getElementById('adContent');
+      const dots = ['dot1', 'dot2', 'dot3', 'dot4'].map(id => document.getElementById(id));
+      
+      dots.forEach((dot, i) => {
+        if (dot) {
+          if (i === index) {
+            dot.classList.remove('bg-gray-300');
+            dot.classList.add('bg-blue-600');
+          } else {
+            dot.classList.remove('bg-blue-600');
+            dot.classList.add('bg-gray-300');
+          }
+        }
+      });
+      
+      const container = document.getElementById('adContainer');
+      if (container) container.style.opacity = '0';
+      
+      setTimeout(() => {
+        if (adContent) {
+          adContent.innerHTML = `
+            <div class="text-6xl mb-4">${ad.icon}</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">${ad.title}</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">${ad.description}</p>
+            <div class="mt-6 w-12 h-1 bg-${ad.color}-400 rounded-full mx-auto"></div>
+          `;
+        }
+        if (container) container.style.opacity = '1';
+      }, 200);
+    }
+    
+    function nextAd() {
+      currentAdIndex = (currentAdIndex + 1) % ads.length;
+      showAd(currentAdIndex);
+    }
+    
+    showAd(0);
+    adInterval = setInterval(nextAd, 5000);
+    
+    let toastTimeout;
+    
+    window.showToast = function(message, isError = true) {
+      const toast = document.getElementById('toastNotification');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+      if (!toast) return;
+      toastMessage.textContent = message;
+      if (isError) {
+        toastIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+        toastIcon.classList.add('text-red-500');
+        toastIcon.classList.remove('text-green-500');
+      } else {
+        toastIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+        toastIcon.classList.add('text-green-500');
+        toastIcon.classList.remove('text-red-500');
+      }
+      toast.classList.remove('hidden');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => hideToast(), 4000);
+    };
+    
+    window.hideToast = function() {
+      const toast = document.getElementById('toastNotification');
+      if (toast) toast.classList.add('hidden');
+    };
+  })();
+</script>
 
 <script th:src="@{/js/main.js}"></script>
 </body>

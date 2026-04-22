@@ -1,67 +1,215 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" data-theme="dark">
-<head th:replace="~{fragments/layout :: head}"></head>
-<body style="background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif;">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}">
+<link rel="icon" type="image/png" th:href="@{/images/logo.png}">
+
+</head>
+
+<body class="bg-gray-50 text-gray-900 font-['Inter',system-ui]">
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-<main class="max-w-4xl mx-auto px-4 py-10">
-  <div class="flex items-center gap-3 mb-6">
-    <a th:href="@{/admin}" class="text-sm hover:opacity-70" style="color: var(--muted);">← Dashboard</a>
-    <h1 class="text-2xl font-extrabold">🗂 Catégories</h1>
-  </div>
-
-  <!-- Flash -->
-  <div th:if="${success}" class="flash-msg mb-4 px-4 py-3 rounded-xl text-sm"
-       style="background: #dcfce7; color: #166534; border: 1px solid #86efac;" th:text="${success}"></div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <!-- Liste -->
-    <div class="rounded-2xl border overflow-hidden" style="background: var(--card); border-color: var(--border);">
-      <div class="px-5 py-4 font-bold text-sm border-b" style="background: var(--badge); border-color: var(--border);">
-        Liste des catégories (<span th:text="${#lists.size(categories)}"></span>)
-      </div>
-      <div th:if="${#lists.isEmpty(categories)}" class="px-5 py-8 text-center text-sm" style="color: var(--muted);">
-        Aucune catégorie créée
-      </div>
-      <div th:each="cat : ${categories}"
-           class="flex items-center justify-between px-5 py-3 border-b last:border-b-0"
-           style="border-color: var(--border);">
-        <div>
-          <p class="font-semibold text-sm" th:text="${cat.nom}"></p>
-          <p class="text-xs" style="color: var(--muted);" th:text="${cat.description}"></p>
+<main class="flex">
+  
+  <!-- ======================================================== -->
+  <!-- ASIDE BARRE DE NAVIGATION ADMIN GÉNÉRIQUE -->
+  <!-- ======================================================== -->
+  <aside class="w-64 min-h-screen bg-white border-r border-gray-200 fixed left-0 top-16 overflow-y-auto z-40">
+    <div class="p-5">
+      <div class="flex items-center gap-3 mb-8 pb-4 border-b border-gray-200">
+        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
         </div>
-        <div class="flex gap-2">
-          <form th:action="@{/admin/categories/supprimer/{id}(id=${cat.id})}" method="post"
-                onsubmit="return confirm('Supprimer cette catégorie ?')">
+        <div>
+          <p class="text-sm font-bold text-gray-900">Panel Admin</p>
+          <p class="text-xs text-gray-500">Gestion complète</p>
+        </div>
+      </div>
+      
+      <nav class="space-y-1">
+        <a th:href="@{/admin}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Tableau de bord
+        </a>
+        
+        <a th:href="@{/admin/produits}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+          </svg>
+          Produits
+        </a>
+        
+        <a th:href="@{/admin/categories}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium  bg-blue-50 text-blue-700 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+          Catégories
+        </a>
+        
+        <a th:href="@{/admin/commandes}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+          </svg>
+          Commandes
+        </a>
+        
+        <a th:href="@{/admin/clients}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          Clients
+        </a>
+      </nav>
+      
+      <div class="mt-8 pt-4 border-t border-gray-200">
+        <a th:href="@{/}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Retour au site
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ======================================================== -->
+  <!-- CONTENU PRINCIPAL -->
+  <!-- ======================================================== -->
+  <div class="flex-1 ml-64">
+    <div class="max-w-5xl mx-auto px-8 py-8">
+      
+      <!-- En-tête -->
+      <div class="flex items-center gap-3 mb-6">
+        <a th:href="@{/admin}" class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600 transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          Retour au dashboard
+        </a>
+      </div>
+      
+      <div class="mb-6">
+        <h1 class="text-2xl font-extrabold text-gray-900">🗂 Gestion des catégories</h1>
+        <p class="text-sm text-gray-500 mt-1">Organisez vos produits par catégories</p>
+      </div>
+
+      <!-- Flash -->
+      <div th:if="${success}" 
+           class="mb-6 px-4 py-3 rounded-xl text-sm font-medium bg-green-50 text-green-700 border border-green-200"
+           th:text="${success}"></div>
+      <div th:if="${erreur}" 
+           class="mb-6 px-4 py-3 rounded-xl text-sm font-medium bg-red-50 text-red-700 border border-red-200"
+           th:text="${erreur}"></div>
+
+      <!-- Grille 2 colonnes -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- ==================================================== -->
+        <!-- COLONNE GAUCHE : Liste des catégories -->
+        <!-- ==================================================== -->
+        <div class="rounded-2xl bg-white border border-gray-200 overflow-hidden shadow-sm">
+          <div class="px-5 py-4 border-b border-gray-200 bg-gray-50">
+            <h2 class="font-bold text-gray-900 flex items-center gap-2">
+              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+              </svg>
+              Liste des catégories
+              <span class="text-xs font-normal text-gray-500 ml-2">(<span th:text="${#lists.size(categories)}"></span>)</span>
+            </h2>
+          </div>
+          
+          <!-- Message vide -->
+          <div th:if="${#lists.isEmpty(categories)}" class="text-center py-12">
+            <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+              </svg>
+            </div>
+            <p class="text-gray-500">Aucune catégorie</p>
+            <p class="text-xs text-gray-400 mt-1">Créez votre première catégorie</p>
+          </div>
+          
+          <!-- Liste -->
+          <div th:unless="${#lists.isEmpty(categories)}" class="divide-y divide-gray-100">
+            <div th:each="cat : ${categories}" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <p class="font-semibold text-gray-900" th:text="${cat.nom}"></p>
+                </div>
+                <p class="text-xs text-gray-500 mt-1 line-clamp-1" th:text="${cat.description}"></p>
+                <p class="text-xs text-gray-400 mt-1" th:text="'ID: ' + ${cat.id}"></p>
+              </div>
+              <div class="flex gap-2">
+                <!-- Bouton supprimer -->
+                <form th:action="@{/admin/categories/supprimer/{id}(id=${cat.id})}" method="post"
+                      onsubmit="return confirm('Supprimer cette catégorie ?\nLes produits associés ne seront pas supprimés.')"
+                      class="inline">
+                  <button type="submit"
+                          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 bg-red-50 border border-red-200 hover:bg-red-100 transition-all"
+                          title="Supprimer">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Supprimer
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- COLONNE DROITE : Formulaire ajout/édition -->
+        <!-- ==================================================== -->
+        <div class="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm">
+          <h2 class="font-bold text-gray-900 mb-5 flex items-center gap-2">
+            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Nouvelle catégorie
+          </h2>
+          
+          <form th:action="@{/admin/categories/sauvegarder}" method="post" class="flex flex-col gap-5">
+            <input type="hidden" name="id" th:value="${categorie.id}"/>
+            
+            <!-- Champ Nom -->
+            <div>
+              <label class="block text-xs font-semibold text-gray-500 mb-2">
+                Nom de la catégorie <span class="text-red-500">*</span>
+              </label>
+              <input type="text" name="nom" required th:value="${categorie.nom}" placeholder="Ex: Smartphones, Accessoires, TV..."
+                     class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"/>
+            </div>
+            
+            <!-- Champ Description -->
+            <div>
+              <label class="block text-xs font-semibold text-gray-500 mb-2">Description</label>
+              <textarea name="description" rows="3" th:text="${categorie.description}" placeholder="Description de la catégorie..."
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"></textarea>
+            </div>
+            
+            <!-- Bouton Sauvegarder -->
             <button type="submit"
-                    class="px-3 py-1.5 rounded-lg text-xs font-medium text-white transition hover:opacity-80"
-                    style="background: #ef4444;">Suppr.</button>
+                    class="w-full py-3 rounded-xl font-bold text-white text-sm bg-blue-600 hover:bg-blue-700 transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+              </svg>
+              Sauvegarder
+            </button>
           </form>
         </div>
       </div>
-    </div>
-
-    <!-- Formulaire ajout/édition -->
-    <div class="rounded-2xl border p-6" style="background: var(--card); border-color: var(--border);">
-      <h2 class="font-bold text-base mb-5">+ Nouvelle catégorie</h2>
-      <form th:action="@{/admin/categories/sauvegarder}" method="post" class="flex flex-col gap-4">
-        <input type="hidden" name="id" th:value="${categorie.id}"/>
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wide mb-1.5" style="color: var(--muted);">Nom *</label>
-          <input type="text" name="nom" required th:value="${categorie.nom}" placeholder="Nom de la catégorie"
-                 class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:ring-2 transition"
-                 style="background: var(--input); border-color: var(--border); color: var(--text);"/>
-        </div>
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wide mb-1.5" style="color: var(--muted);">Description</label>
-          <textarea name="description" rows="3" th:text="${categorie.description}" placeholder="Description..."
-                    class="w-full px-4 py-3 rounded-xl border text-sm outline-none resize-none focus:ring-2 transition"
-                    style="background: var(--input); border-color: var(--border); color: var(--text);"></textarea>
-        </div>
-        <button type="submit"
-                class="w-full py-3 rounded-xl font-bold text-black transition hover:opacity-80"
-                style="background: var(--accent);">💾 Sauvegarder</button>
-      </form>
     </div>
   </div>
 </main>

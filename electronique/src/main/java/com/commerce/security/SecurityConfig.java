@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -17,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final CustomAuthSuccessHandler successHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -24,31 +26,73 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            // Désactiver CSRF pour les tests (à réactiver en production)
+            .csrf(csrf -> csrf.disable())
+            
+            // Configuration des autorisations
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/produits/**", "/auth/**", "/css/**", "/js/**", "/images/**").permitAll()
+                // Pages publiques (accessibles sans authentification)
+                .requestMatchers(
+                    "/",
+                    "/produits",
+                    "/produits/**",
+                    "/auth/login",
+                    "/auth/register",
+                    "/auth/forgot-password",
+                    "/auth/reset-password",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**",
+                    "/access-denied"
+                ).permitAll()
+                
+                // Admin uniquement
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/panier/**", "/commande/**").hasRole("CLIENT")
+                
+                // Client uniquement
+                .requestMatchers("/panier/**", "/commande/**", "/mes-commandes/**").hasRole("CLIENT")
+                
+                // Toute autre requête nécessite une authentification
                 .anyRequest().authenticated()
             )
+            
+            // Configuration du formulaire de connexion
             .formLogin(form -> form
                 .loginPage("/auth/login")
-                .defaultSuccessUrl("/", true)
-                .failureUrl("/auth/login?error")
+                .loginProcessingUrl("/auth/login")
+                .usernameParameter("email")
+                .passwordParameter("motDePasse")
+                .successHandler(successHandler)
+                .failureUrl("/auth/login?error=true")
                 .permitAll()
             )
+            
+            // Configuration de la déconnexion
             .logout(logout -> logout
                 .logoutUrl("/auth/logout")
-                .logoutSuccessUrl("/auth/login?logout")
+                .logoutSuccessUrl("/auth/login?logout=true")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
                 .permitAll()
             )
+            
+            // Gestion des erreurs d'accès
+            .exceptionHandling(ex -> ex
+                .accessDeniedPage("/access-denied")
+            )
+            
+            // Service utilisateur
             .userDetailsService(userDetailsService);
+
         return http.build();
     }
 }

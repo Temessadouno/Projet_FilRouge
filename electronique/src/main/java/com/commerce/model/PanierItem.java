@@ -23,6 +23,9 @@ public class PanierItem {
 
     @Column(nullable = false)
     private int quantite = 1;
+    
+    @Column(nullable = false)
+    private boolean enabled = true;  // Par défaut activé
 
     @Column(name = "added_at")
     private LocalDateTime addedAt;
