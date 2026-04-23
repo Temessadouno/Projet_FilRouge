@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.commerce.service.ProduitServiceTest
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.561 s -- in com.commerce.service.ProduitServiceTest

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body class="bg-white text-gray-900 antialiased">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<!-- ============================================================ -->
+<!-- MAIN CONTENT AVEC PUBLICITÉ À DROITE -->
+<!-- ============================================================ -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex flex-col lg:flex-row gap-8">
+    
+    <!-- ======================================================== -->
+    <!-- COLONNE GAUCHE : HERO SECTION -->
+    <!-- ======================================================== -->
+    <div class="lg:w-2/3">
+      <section class="relative min-h-[80vh] flex flex-col justify-center">
+        <!-- Grille de fond -->
+        <div class="absolute inset-0 pointer-events-none bg-[length:56px_56px] bg-[image:linear-gradient(rgba(37,99,235,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(37,99,235,0.03)_1px,transparent_1px)]"></div>
+        <!-- Glow -->
+        <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_50%_at_15%_60%,rgba(37,99,235,0.07)_0%,transparent_65%)]"></div>
+
+        <div class="relative z-10 w-full py-4">
+          <!-- Eyebrow -->
+          <div class="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-500 rounded-full px-3.5 py-1 text-[0.68rem] font-bold tracking-[0.1em] uppercase mb-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+            Nouvelle collection 2026
+          </div>
+
+          <!-- Titre -->
+          <h1 class="font-extrabold tracking-tighter text-black uppercase text-[clamp(2.8rem,6vw,5rem)] leading-[1.04] max-w-full">
+            Votre boutique<br/>
+            <span class="text-blue-600">Electronique</span><br/>
+            <span class="text-gray-400">en ligne.</span>
+          </h1>
+
+          <!-- Description -->
+          <p class="mt-5 text-sm leading-relaxed text-gray-500 max-w-md">
+            Des produits soigneusement sélectionnés, des prix imbattables.
+            Commandez en 2 minutes, recevez en 24h.
+          </p>
+
+          <!-- Boutons -->
+          <div class="flex flex-wrap gap-3 mt-8">
+            <a th:href="@{/produits}"
+               class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200">
+              Explorer le catalogue
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+
+            <sec:authorize access="isAnonymous()">
+              <a th:href="@{/auth/login}"
+                 class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium text-gray-400 border border-gray-300 hover:border-blue-500/40 hover:text-blue-500 transition-all duration-200">
+                Connexion
+              </a>
+            </sec:authorize>
+
+            <sec:authorize access="isAuthenticated()">
+              <a th:href="@{/panier}"
+                 class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium text-gray-400 border border-gray-300 hover:border-blue-500/40 hover:text-blue-500 transition-all duration-200">
+                Mon panier
+              </a>
+            </sec:authorize>
+          </div>
+
+          <!-- Stats -->
+          <div class="flex gap-10 mt-14 pt-10 border-t border-gray-200">
+            <div>
+              <p class="text-2xl font-extrabold text-gray-900"
+                 th:text="${#lists.isEmpty(produits) ? '0' : #lists.size(produits)}">—</p>
+              <p class="text-xs mt-1 text-gray-500">Produits</p>
+            </div>
+            <div class="w-px bg-gray-200"></div>
+            <div>
+              <p class="text-2xl font-extrabold text-gray-900">24h</p>
+              <p class="text-xs mt-1 text-gray-500">Livraison</p>
+            </div>
+            <div class="w-px bg-gray-200"></div>
+            <div>
+              <p class="text-2xl font-extrabold text-gray-900">100%</p>
+              <p class="text-xs mt-1 text-gray-500">Satisfait</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- COLONNE DROITE : PUBLICITÉS ROTATIVES -->
+    <!-- ======================================================== -->
+    <aside class="lg:w-1/3">
+      <div class="sticky top-24 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-6 overflow-hidden min-h-[450px] flex flex-col shadow-sm">
+        
+        <!-- Icône décorative -->
+        <div class="text-center mb-4">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+        </div>
+        
+        <!-- Contenu rotatif -->
+        <div id="adContainer" class="flex-1 flex flex-col items-center justify-center text-center transition-opacity duration-500">
+          <div id="adContent"></div>
+        </div>
+        
+        <!-- Indicateurs de pagination -->
+        <div class="flex justify-center gap-2 mt-6">
+          <div id="dot1" class="w-2 h-2 rounded-full bg-blue-600 transition-all"></div>
+          <div id="dot2" class="w-2 h-2 rounded-full bg-gray-300 transition-all"></div>
+          <div id="dot3" class="w-2 h-2 rounded-full bg-gray-300 transition-all"></div>
+          <div id="dot4" class="w-2 h-2 rounded-full bg-gray-300 transition-all"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- ============================================================ -->
+<!-- TICKER -->
+<!-- ============================================================ -->
+<div class="overflow-hidden bg-blue-600 py-2.5 mt-8">
+  <div class="flex w-max animate-[ticker_24s_linear_infinite] whitespace-nowrap">
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Livraison express 24h</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Produits premium</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Paiement sécurisé</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Nouveautés chaque semaine</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Stock toujours disponible</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Support 7j/7</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Livraison dans tout le Maroc</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Livraison express 24h</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Produits premium</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Paiement sécurisé</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Nouveautés chaque semaine</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Stock toujours disponible</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Support 7j/7</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">Livraison dans tout le Maroc</span>
+    <span class="px-7 text-[0.7rem] font-bold tracking-[0.07em] text-white uppercase">·</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- FLASH MESSAGES -->
+<!-- ============================================================ -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+  <div th:if="${success}"
+       class="mb-4 px-4 py-3 rounded-xl text-sm font-medium bg-green-50 text-green-700 border border-green-200"
+       th:text="${success}"></div>
+  <div th:if="${erreur}"
+       class="mb-4 px-4 py-3 rounded-xl text-sm font-medium bg-red-50 text-red-700 border border-red-200"
+       th:text="${erreur}"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CTA SECTION -->
+<!-- ============================================================ -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-28">
+  <sec:authorize access="isAnonymous()">
+    <div class="rounded-2xl bg-gray-50 border border-gray-200 p-12 flex items-center justify-between gap-8 flex-wrap">
+      <div>
+        <p class="text-[0.7rem] font-bold uppercase tracking-wider mb-3 text-blue-600">Offre exclusive</p>
+        <h2 class="text-2xl font-extrabold text-gray-900 tracking-tight leading-tight">
+          Rejoignez NUALI-ELECTRONIQUE<br/>et commencez vos achats
+        </h2>
+        <p class="text-sm mt-2 text-gray-500">Inscription gratuite · Livraison rapide · Retours faciles</p>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <a th:href="@{/auth/register}"
+           class="inline-block px-6 py-3 rounded-xl font-bold text-white text-sm bg-blue-600 hover:bg-blue-700 transition-all duration-200">
+          Créer un compte →
+        </a>
+        <a th:href="@{/produits}"
+           class="inline-block px-6 py-3 rounded-xl font-medium text-sm text-gray-600 border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all duration-200">
+          Voir le catalogue
+        </a>
+      </div>
+    </div>
+  </sec:authorize>
+
+  <sec:authorize access="isAuthenticated()">
+    <div class="rounded-2xl bg-gray-50 border border-gray-200 p-12 flex items-center justify-between gap-8 flex-wrap">
+      <div>
+        <p class="text-[0.7rem] font-bold uppercase tracking-wider mb-3 text-blue-600">Bon retour</p>
+        <h2 class="text-2xl font-extrabold text-gray-900 tracking-tight leading-tight">
+          Bienvenue de retour !<br/>Votre panier vous attend.
+        </h2>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <a th:href="@{/produits}"
+           class="inline-block px-6 py-3 rounded-xl font-bold text-white text-sm bg-blue-600 hover:bg-blue-700 transition-all duration-200">
+          Explorer le catalogue →
+        </a>
+        <a th:href="@{/panier}"
+           class="inline-block px-6 py-3 rounded-xl font-medium text-sm text-gray-600 border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all duration-200">
+          Mon panier
+        </a>
+      </div>
+    </div>
+  </sec:authorize>
+</section>
+
+<!-- ============================================================ -->
+<!-- FOOTER -->
+<!-- ============================================================ -->
+<footer class="border-t border-gray-200 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+      <span class="text-sm font-bold text-gray-900">NUALI-ELECTRONIQUE</span>
+    </div>
+    <p class="text-xs text-gray-500">© 2026 NUALI-ELECTRONIQUE · Projet Fil Rouge</p>
+    <div class="flex gap-5 text-xs text-gray-500">
+      <a th:href="@{/produits}" class="hover:text-blue-600 transition-colors duration-200">Produits</a>
+      <a th:href="@{/auth/login}" class="hover:text-blue-600 transition-colors duration-200">Connexion</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================ -->
+<!-- SCRIPTS PUBLICITÉS ROTATIVES -->
+<!-- ============================================================ -->
+<script>
+  (function() {
+    const ads = [
+      { icon: "🚚", title: "Livraison Express 24h", description: "Recevez vos commandes le lendemain, partout au Maroc", color: "blue" },
+      { icon: "🔒", title: "Paiement 100% Sécurisé", description: "Vos données bancaires sont protégées par chiffrement SSL", color: "green" },
+      { icon: "🎁", title: "-10% sur votre première commande", description: "Code bienvenue : NUALI10", color: "purple" },
+      { icon: "⭐", title: "Service Client 7j/7", description: "Une équipe à votre écoute pour vous assister", color: "orange" }
+    ];
+    
+    let currentAdIndex = 0;
+    let adInterval;
+    
+    function showAd(index) {
+      const ad = ads[index];
+      const adContent = document.getElementById('adContent');
+      const dots = ['dot1', 'dot2', 'dot3', 'dot4'].map(id => document.getElementById(id));
+      
+      dots.forEach((dot, i) => {
+        if (dot) {
+          if (i === index) {
+            dot.classList.remove('bg-gray-300');
+            dot.classList.add('bg-blue-600');
+          } else {
+            dot.classList.remove('bg-blue-600');
+            dot.classList.add('bg-gray-300');
+          }
+        }
+      });
+      
+      const container = document.getElementById('adContainer');
+      if (container) container.style.opacity = '0';
+      
+      setTimeout(() => {
+        const bgColors = { blue: 'from-blue-50 to-indigo-50', green: 'from-green-50 to-emerald-50', purple: 'from-purple-50 to-pink-50', orange: 'from-orange-50 to-amber-50' };
+        const adContainerDiv = document.querySelector('.lg\\:w-1\\/3 > div');
+        if (adContainerDiv) {
+          adContainerDiv.className = `sticky top-24 rounded-2xl bg-gradient-to-br ${bgColors[ad.color]} border border-${ad.color}-100 p-6 overflow-hidden min-h-[450px] flex flex-col shadow-sm`;
+        }
+        
+        if (adContent) {
+          adContent.innerHTML = `
+            <div class="text-6xl mb-4">${ad.icon}</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">${ad.title}</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">${ad.description}</p>
+            <div class="mt-6 w-12 h-1 bg-${ad.color}-400 rounded-full mx-auto"></div>
+          `;
+        }
+        if (container) container.style.opacity = '1';
+      }, 200);
+    }
+    
+    function nextAd() {
+      currentAdIndex = (currentAdIndex + 1) % ads.length;
+      showAd(currentAdIndex);
+    }
+    
+    showAd(0);
+    adInterval = setInterval(nextAd, 5000);
+  })();
+</script>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

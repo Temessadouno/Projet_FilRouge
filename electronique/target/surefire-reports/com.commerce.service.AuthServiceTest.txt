@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.commerce.service.AuthServiceTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.26 s -- in com.commerce.service.AuthServiceTest

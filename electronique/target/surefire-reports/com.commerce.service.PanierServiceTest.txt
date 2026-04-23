@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.commerce.service.PanierServiceTest
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.108 s -- in com.commerce.service.PanierServiceTest

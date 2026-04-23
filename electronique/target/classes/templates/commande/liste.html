@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body class="bg-white text-gray-900 font-['Inter',system-ui]">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  
+  <!-- En-tête -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">Mes commandes</h1>
+    <p class="text-sm text-gray-500 mt-1">Retrouvez l'historique de toutes vos commandes</p>
+  </div>
+
+  <!-- Aucune commande -->
+  <div th:if="${#lists.isEmpty(commandes)}" 
+       class="text-center py-16 rounded-2xl bg-gray-50 border border-gray-200">
+    <div class="w-20 h-20 rounded-full mx-auto mb-5 flex items-center justify-center bg-blue-100">
+      <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+      </svg>
+    </div>
+    <p class="text-xl font-semibold text-gray-900 mb-2">Aucune commande</p>
+    <p class="text-sm text-gray-500 mb-6">Vous n'avez pas encore passé de commande</p>
+    <a th:href="@{/produits}" 
+       class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white text-sm bg-blue-600 hover:bg-blue-700 transition-all duration-200">
+      Commencer mes achats
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Liste des commandes -->
+  <div th:unless="${#lists.isEmpty(commandes)}" class="space-y-4">
+    <div th:each="cmd : ${commandes}"
+         class="rounded-2xl border border-gray-200 bg-white overflow-hidden hover:shadow-lg transition-all duration-300">
+      
+      <!-- En-tête de la commande -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 py-4 border-b border-gray-100 bg-gray-50">
+        <div class="flex items-center gap-4">
+          <div>
+            <span class="text-xs text-gray-500">N° commande</span>
+            <p class="font-extrabold text-gray-900">#<span th:text="${cmd.id}"></span></p>
+          </div>
+          <div class="w-px h-8 bg-gray-200"></div>
+          <div>
+            <span class="text-xs text-gray-500">Date</span>
+            <p class="text-sm font-medium text-gray-700"
+               th:text="${#temporals.format(cmd.dateCommande, 'dd/MM/yyyy à HH:mm')}"></p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <!-- Badge statut -->
+          <span class="px-3 py-1.5 rounded-full text-xs font-bold"
+                th:text="${cmd.statut}"
+                th:classappend="${cmd.statut.toString() == 'VALIDEE'} ? 'bg-green-100 text-green-700' : (${cmd.statut.toString() == 'ANNULEE'} ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700')">
+          </span>
+          
+          <!-- Bouton reçu -->
+          <a th:href="@{/commande/recu/{id}(id=${cmd.id})}"
+             class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50 transition-all duration-200">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+            Voir le reçu
+          </a>
+        </div>
+      </div>
+      
+      <!-- Corps de la commande -->
+      <div class="px-5 py-4">
+        <!-- Liste des produits -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span th:each="ligne : ${cmd.lignes}" 
+                class="text-xs py-1.5 px-3 rounded-full bg-gray-100 text-gray-600"
+                th:text="${ligne.produit.nom} + ' × ' + ${ligne.quantite}"></span>
+        </div>
+        
+        <!-- Total -->
+        <div class="flex justify-end items-center gap-4 pt-3 border-t border-gray-100">
+          <span class="text-sm text-gray-500">Total</span>
+          <span class="text-xl font-extrabold text-blue-600"
+                th:text="${#numbers.formatDecimal(cmd.total,1,2)} + ' MAD'"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

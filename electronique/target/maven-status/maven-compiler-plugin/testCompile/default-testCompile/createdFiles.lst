@@ -1,0 +1,8 @@
+com\commerce\model\ModelTest.class
+com\commerce\controller\PanierControllerTest.class
+com\commerce\controller\ProduitControllerTest.class
+com\commerce\service\AuthServiceTest.class
+com\commerce\service\CommandeServiceTest.class
+com\commerce\service\PanierServiceTest.class
+com\commerce\service\ProduitServiceTest.class
+Electronique\ElectroniqueApplicationTests.class

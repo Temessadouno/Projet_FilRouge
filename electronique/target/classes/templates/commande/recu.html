@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body class="bg-white text-gray-900 font-['Inter',system-ui]">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  
+  <!-- Reçu card -->
+  <div id="recu-print" class="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+    
+    <!-- Header -->
+    <div class="text-center py-8 px-6 border-b border-dashed border-gray-200 bg-gray-50">
+      <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+        <a th:href="@{/}" class="flex items-center gap-2.5 group">
+		  
+		  <!-- LOGO -->
+		  <img th:src="@{/images/logo.png}" 
+		       alt="Logo"
+		       class=" rounded-full bg-white bourder-2 border-green-600  object-contain">
+		
+		</a>
+      </div>
+      <h1 class="text-2xl font-extrabold text-gray-900">Reçu de commande</h1>
+      <p class="text-3xl font-extrabold mt-2 text-blue-600">
+        #<span th:text="${commande.id}"></span>
+      </p>
+      <p class="text-sm mt-2 text-gray-500"
+         th:text="${#temporals.format(commande.dateCommande, 'dd/MM/yyyy à HH:mm')}"></p>
+      
+      <!-- Badge statut -->
+      <span class="inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-bold"
+            th:text="${commande.statut}"
+            th:classappend="${commande.statut.toString() == 'VALIDEE'} ? 'bg-green-100 text-green-700' : (${commande.statut.toString() == 'ANNULEE'} ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700')">
+      </span>
+    </div>
+
+    <!-- Infos client -->
+    <div class="px-6 py-5 border-b border-gray-100">
+      <p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-2">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+        </svg>
+        Informations client
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+        <div>
+          <p class="text-xs text-gray-400">Client</p>
+          <p class="font-semibold text-gray-900" th:text="${commande.client.nomComplet}"></p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-400">Email</p>
+          <p class="font-semibold text-gray-900" th:text="${commande.client.email}"></p>
+        </div>
+        <div class="sm:col-span-2">
+          <p class="text-xs text-gray-400">Adresse de livraison</p>
+          <p class="font-semibold text-gray-900" th:text="${commande.adresseLivraison}"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tableau des produits -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-xs uppercase tracking-wider bg-gray-50 text-gray-500">
+            <th class="px-5 py-3 text-left">Produit</th>
+            <th class="px-5 py-3 text-center">Qté</th>
+            <th class="px-5 py-3 text-right">Prix unit.</th>
+            <th class="px-5 py-3 text-right">Sous-total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="ligne : ${commande.lignes}" class="border-t border-gray-100">
+            <td class="px-5 py-3 font-medium text-gray-900" th:text="${ligne.produit.nom}"></td>
+            <td class="px-5 py-3 text-center text-gray-600" th:text="${ligne.quantite}"></td>
+            <td class="px-5 py-3 text-right text-gray-600"
+                th:text="${#numbers.formatDecimal(ligne.prixUnitaire,1,2)} + ' MAD'"></td>
+            <td class="px-5 py-3 text-right font-bold text-blue-600"
+                th:text="${#numbers.formatDecimal(ligne.sousTotal,1,2)} + ' MAD'"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="border-t-2 border-blue-200 bg-gray-50">
+            <td colspan="3" class="px-5 py-4 text-right font-extrabold text-gray-900">TOTAL</td>
+            <td class="px-5 py-4 text-right font-extrabold text-xl text-blue-600"
+                th:text="${#numbers.formatDecimal(commande.total,1,2)} + ' MAD'"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Pied de page -->
+    <div class="text-center py-5 text-xs text-gray-400 border-t border-dashed border-gray-200">
+      <p>Merci pour votre commande !</p>
+      <p class="mt-1">NUALI-ELECTRONIQUE - Votre boutique en ligne</p>
+    </div>
+  </div>
+
+  <!-- Actions (cachées à l'impression) -->
+  <div class="flex flex-wrap gap-3 justify-center mt-6 no-print">
+    <button onclick="window.print()"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white text-sm bg-blue-600 hover:bg-blue-700 transition-all duration-200 shadow-sm">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+      </svg>
+      Imprimer le reçu
+    </button>
+    
+    <a th:href="@{/commande/mes-commandes}"
+       class="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-medium text-sm text-gray-600 border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all duration-200">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+      Mes commandes
+    </a>
+    
+    <a th:href="@{/}"
+       class="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-medium text-sm text-gray-600 border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all duration-200">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+      </svg>
+      Accueil
+    </a>
+  </div>
+</main>
+
+<style media="print">
+  .no-print {
+    display: none !important;
+  }
+  nav, footer {
+    display: none !important;
+  }
+  #recu-print {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+</style>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

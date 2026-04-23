@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body class="bg-white text-gray-900 font-['Outfit',system-ui]">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  
+  <!-- Bouton retour -->
+  <a th:href="@{/produits}" 
+     class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition-colors duration-200 mb-8">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+    </svg>
+    Retour aux produits
+  </a>
+
+  <!-- Grille 2 colonnes -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    
+    <!-- COLONNE GAUCHE : Image -->
+    <div class="rounded-2xl overflow-hidden  ">
+      <img th:src="${produit.imageUrl}" 
+           th:alt="${produit.nom}"
+           onerror="this.src='/images/placeholder.png'"
+           class="w-full object-cover h-[450px]"/>
+    </div>
+
+    <!-- COLONNE DROITE : Infos produit -->
+    <div class="flex flex-col gap-5">
+      
+      <!-- Catégorie -->
+      <div>
+        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-700"
+              th:text="${produit.categorie.nom}"></span>
+        <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-gray-900" th:text="${produit.nom}"></h1>
+        <p class="text-sm mt-1 text-gray-500" th:text="'Marque : ' + ${produit.marque}"></p>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- DESCRIPTION AMÉLIORÉE (format -- comme séparateur) -->
+      <!-- ======================================================== -->
+      <div class="description-container">
+        <div id="descriptionParagraphes" class="space-y-4 overflow-y-auto h-48">
+          <!-- Le contenu sera généré dynamiquement -->
+        </div>
+        
+        <button id="readMoreBtn" 
+                class="mt-4 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors duration-200 flex items-center gap-1">
+          <span>Lire la suite</span>
+          <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Prix et stock -->
+      <div class="flex items-center gap-4 py-4 border-t border-b border-gray-200">
+        <span class="text-4xl font-extrabold text-blue-600" 
+              th:text="${#numbers.formatDecimal(produit.prix,1,2)} + ' MAD'"></span>
+        <span th:if="${produit.enStock}"
+              class="text-sm font-bold px-3 py-1 rounded-full bg-green-100 text-green-700"
+              th:text="'✓ En stock (' + ${produit.stock} + ' disponibles)'"></span>
+        <span th:unless="${produit.enStock}"
+              class="text-sm font-bold px-3 py-1 rounded-full bg-red-100 text-red-700">
+          ✕ Rupture de stock
+        </span>
+      </div>
+
+      <!-- Formulaire ajout panier (CLIENT connecté) -->
+      <sec:authorize access="isAuthenticated()">
+      <div  th:if="${session.estConnecter == true and session.userRole == 'CLIENT'}" >
+        <form th:action="@{/panier/ajouter}" method="post" th:if="${produit.enStock}" class="flex flex-col gap-4">
+          <input type="hidden" name="produitId" th:value="${produit.id}"/>
+          
+          <div class="flex items-center gap-4">
+            <label class="text-sm font-medium text-gray-700">Quantité :</label>
+            <div class="flex items-center gap-2">
+              <button type="button" 
+                      class="qty-decr w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                </svg>
+              </button>
+              <input type="number" 
+                     name="quantite" 
+                     id="quantite"
+                     value="1" 
+                     min="1" 
+                     th:max="${produit.stock}"
+                     class="w-16 px-3 py-2 rounded-lg border border-gray-300 text-center font-semibold text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"/>
+              <button type="button"
+                      class="qty-incr w-8 h-8 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+              </button>
+            </div>
+            <span class="text-xs text-gray-400" th:text="'Max: ' + ${produit.stock}"></span>
+          </div>
+          
+          <div>
+            <button type="submit"
+                    class="w-full py-3 rounded-xl font-bold text-white text-base bg-blue-600 hover:bg-blue-700 hover:scale-[1.02] transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+              </svg>
+              Ajouter au panier
+            </button>
+          </div>
+        </form>
+        
+        <div th:unless="${produit.enStock}" 
+             class="rounded-xl p-4 text-center bg-gray-100 border border-gray-200">
+          <p class="text-sm text-gray-500">Ce produit n'est actuellement pas disponible.</p>
+        </div>
+        </div>
+      </sec:authorize>
+
+      <!-- Message pour utilisateur non connecté -->
+      <sec:authorize access="isAnonymous()">
+      <div  th:if="${session.estConnecter != true and session.userRole != 'CLIENT'}">
+        <div class="rounded-xl p-5 text-center bg-gray-50 border border-gray-200">
+          <svg class="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          <p class="text-sm text-gray-600 mb-3">Connectez-vous pour ajouter ce produit à votre panier</p>
+          <div class="flex gap-3 justify-center">
+            <a th:href="@{/auth/login}" 
+               class="px-5 py-2 rounded-xl font-medium text-sm text-white bg-blue-600 hover:bg-blue-700 transition-all">
+              Se connecter
+            </a>
+            <a th:href="@{/auth/register}" 
+               class="px-5 py-2 rounded-xl font-medium text-sm text-gray-600 border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all">
+              S'inscrire
+            </a>
+          </div>
+        </div>
+        </div>
+      </sec:authorize>
+
+      <!-- Admin : Modifier -->
+      <div  th:if="${session.estConnecter == true and session.userRole == 'ADMIN'}">
+        <a th:href="@{/admin/produits/editer/{id}(id=${produit.id})}"
+           class="w-full text-center py-3 rounded-xl font-medium text-sm text-gray-600 border border-gray-300 hover:border-amber-500 hover:text-amber-600 transition-all duration-200">
+          ✏️ Modifier ce produit (Admin)
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</main>
+
+<script th:src="@{/js/main.js}"></script>
+
+<!-- Script pour la description au meilleur format -->
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    // ========================================================
+    // DESCRIPTION AVEC FORMAT -- COMME SÉPARATEUR
+    // ========================================================
+    const descriptionTexte = /*[[${produit.description}]]*/ '';
+    const container = document.getElementById('descriptionParagraphes');
+    const readMoreBtn = document.getElementById('readMoreBtn');
+    
+    if (container && descriptionTexte) {
+      
+      // Fonction pour formater une section individuelle
+      function formatSection(text) {
+        let formatted = text;
+        
+        // 1. Mettre en gras les titres (mots suivis de ':' au début)
+        formatted = formatted.replace(/^([A-ZÀ-Ú][a-zà-ú]+(?: [A-ZÀ-Ú][a-zà-ú]+)*) :/gm, '<strong class="font-bold text-gray-900 block text-base mb-1">$1</strong>');
+        
+        // 2. Mettre en gras les mots-clés importants avec **texte**
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>');
+        
+        // 3. Mettre en italique avec *texte*
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em class="italic text-gray-700">$1</em>');
+        
+        // 4. Ajouter une icône pour les sections (optionnel)
+        if (formatted.includes('Design') || formatted.includes('Performance') || 
+            formatted.includes('Caméra') || formatted.includes('Autonomie') ||
+            formatted.includes('Connectivité')) {
+          // Ajouter un petit indicateur visuel
+          formatted = `<div class="flex gap-2">
+                         <div class="w-1 h-auto rounded-full bg-blue-400"></div>
+                         <div class="flex-1">${formatted}</div>
+                       </div>`;
+        }
+        
+        // 5. Gérer les puces (- texte)
+        formatted = formatted.replace(/^- (.*?)$/gm, '<li class="ml-4 text-gray-600">$1</li>');
+        if (formatted.includes('<li>')) {
+          formatted = formatted.replace(/(<li>.*?<\/li>\n?)+/g, '<ul class="list-disc space-y-1 my-2 ml-2">$&</ul>');
+        }
+        
+        // 6. Gérer les émojis (les garder)
+        // 7. Retour à la ligne simple -> espace, double retour -> nouveau paragraphe
+        formatted = formatted.replace(/\n\n/g, '</p><p class="text-gray-600 leading-relaxed">');
+        formatted = '<p class="text-gray-600 leading-relaxed">' + formatted + '</p>';
+        
+        return formatted;
+      }
+      
+      // Découper la description par " -- " (séparateur de sections)
+      let sections = [];
+      
+      if (descriptionTexte.includes(' -- ')) {
+        // Découpage par " -- "
+        sections = descriptionTexte.split(' -- ');
+      } else if (descriptionTexte.includes('--')) {
+        sections = descriptionTexte.split('--');
+      } else {
+        // Fallback : découpage par phrases
+        let phrases = descriptionTexte.split(/(?<=[.!?])\s+(?=[A-ZÀ-Ú«"])/g);
+        let tempSection = '';
+        for (let i = 0; i < phrases.length; i++) {
+          tempSection += phrases[i];
+          if ((i + 1) % 2 === 0 || i === phrases.length - 1) {
+            sections.push(tempSection);
+            tempSection = '';
+          }
+        }
+      }
+      
+      // Nettoyer les sections (supprimer espaces inutiles)
+      sections = sections.map(s => s.trim()).filter(s => s.length > 0);
+      
+      // Si aucune section détectée, utiliser le texte complet
+      if (sections.length === 0 && descriptionTexte) {
+        sections = [descriptionTexte];
+      }
+      
+      // Générer le HTML pour chaque section
+      let allSectionsHtml = '';
+      sections.forEach((section, index) => {
+        // Extraire le titre de la section (premiers mots avant ':' ou premier point)
+        let title = '';
+        let content = section;
+        
+        // Chercher un titre (mots suivis de ':' au début)
+        const titleMatch = section.match(/^([A-ZÀ-Ú][a-zà-ú]+(?: [A-ZÀ-Ú][a-zà-ú]+)*)\s*:/);
+        if (titleMatch) {
+          title = titleMatch[1];
+          content = section.substring(titleMatch[0].length);
+        }
+        
+        // Si pas de titre trouvé, prendre les 3 premiers mots comme titre
+        if (!title && section.length > 0) {
+          const words = section.split(' ');
+          if (words.length >= 3) {
+            title = words.slice(0, 3).join(' ');
+            content = section.substring(title.length);
+          }
+        }
+        
+        allSectionsHtml += `
+          <div class="section-paragraph border-l-4 border-blue-200 pl-4 py-1" data-section="${index}" ${index >= 2 ? 'style="display: none;"' : ''}>
+            ${title ? `<h4 class="font-bold text-gray-800 text-base mb-2 flex items-center gap-2">
+                         <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                         ${title}
+                       </h4>` : ''}
+            <div class="text-gray-600 leading-relaxed space-y-2">
+              ${formatSection(content)}
+            </div>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = allSectionsHtml;
+      
+      // Gérer le bouton "Lire la suite"
+      const sectionsElements = document.querySelectorAll('.section-paragraph');
+      let currentVisible = 2; // 2 sections visibles initialement
+      const totalSections = sectionsElements.length;
+      
+      if (totalSections > 2) {
+        readMoreBtn.style.display = 'flex';
+        
+        readMoreBtn.addEventListener('click', function() {
+          if (currentVisible < totalSections) {
+            // Afficher la section suivante
+            const nextSection = document.querySelector(`.section-paragraph[data-section="${currentVisible}"]`);
+            if (nextSection) {
+              nextSection.style.display = 'block';
+              currentVisible++;
+            }
+            
+            // Si c'est la dernière, changer le texte
+            if (currentVisible === totalSections) {
+              readMoreBtn.innerHTML = '<span>Réduire</span><svg class="w-4 h-4 transition-transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>';
+            }
+          } else {
+            // Replier : cacher toutes les sections au-delà de la 2ème
+            for (let i = 2; i < totalSections; i++) {
+              const section = document.querySelector(`.section-paragraph[data-section="${i}"]`);
+              if (section) section.style.display = 'none';
+            }
+            currentVisible = 2;
+            readMoreBtn.innerHTML = '<span>Lire la suite</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>';
+          }
+        });
+      } else {
+        readMoreBtn.style.display = 'none';
+      }
+    }
+    
+    // ========================================================
+    // GESTION DES BOUTONS + ET -
+    // ========================================================
+    const quantiteInput = document.getElementById('quantite');
+    const btnDecr = document.querySelector('.qty-decr');
+    const btnIncr = document.querySelector('.qty-incr');
+    
+    if (quantiteInput && btnDecr && btnIncr) {
+      const maxStock = parseInt(quantiteInput.getAttribute('max'));
+      
+      btnDecr.addEventListener('click', function() {
+        let val = parseInt(quantiteInput.value);
+        if (val > 1) {
+          quantiteInput.value = val - 1;
+        }
+      });
+      
+      btnIncr.addEventListener('click', function() {
+        let val = parseInt(quantiteInput.value);
+        if (val < maxStock) {
+          quantiteInput.value = val + 1;
+        }
+      });
+    }
+  });
+  /*]]>*/
+</script>
+
+<style>
+  .section-paragraph {
+    animation: slideIn 0.3s ease-out;
+    transition: all 0.2s ease;
+  }
+  
+  .section-paragraph:hover {
+    border-left-color: #3b82f6;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+</style>
+</body>
+</html>
