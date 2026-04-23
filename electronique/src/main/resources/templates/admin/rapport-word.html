@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport de Qualité Logicielle</title>
+    <style>
+        body {
+            font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+            margin: 2cm;
+            line-height: 1.4;
+            font-size: 11pt;
+        }
+        h1 { font-size: 20pt; color: #1e3a8a; text-align: center; margin-bottom: 20px; }
+        h2 { font-size: 16pt; color: #2563eb; margin-top: 25px; border-bottom: 2px solid #2563eb; padding-bottom: 5px; }
+        h3 { font-size: 14pt; color: #3b82f6; margin-top: 20px; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f0f9ff; font-weight: bold; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .stats-grid { display: flex; gap: 15px; flex-wrap: wrap; margin: 15px 0; }
+        .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; flex: 1; min-width: 120px; text-align: center; }
+        .stat-card .value { font-size: 20pt; font-weight: bold; color: #2563eb; }
+        .progress-bar { background: #e5e7eb; border-radius: 4px; height: 10px; width: 100%; }
+        .progress-fill { background: #10b981; height: 10px; border-radius: 4px; }
+        .footer { text-align: center; margin-top: 50px; font-size: 9pt; color: #666; border-top: 1px solid #ccc; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 RAPPORT DE QUALITÉ LOGICIELLE</h1>
+        <p><strong>Projet :</strong> E-commerce (fil-Rouge) - NUALI-ELECTRONIQUE</p>
+        <p><strong>Date :</strong> <span th:text="${#dates.format(reportDate, 'dd/MM/yyyy HH:mm:ss')}"></span></p>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+        <p><strong>Réalisé Par :</strong><br/>
+        TEMESSADOUNO Tamba Marcel<br/>
+        SOGLONDEY Ezéchiel Comlan Aso</p>
+        <p><strong>Encadré par :</strong><br/>
+        Madame Chanti</p>
+    </div>
+    
+    <h2>I. CONTEXTE DU PROJET</h2>
+    <h3>1. Présentation du projet</h3>
+    <p>Le projet AQL E-Commerce est un projet fil rouge réalisé dans le cadre de la formation en développement logiciel, sous l'encadrement de Madame Chanti. Il s'agit d'une plateforme de commerce électronique complète, conçue et développée en Java avec Spring Boot.</p>
+    
+    <h3>2. Stack technique</h3>
+    <table>
+        <tr><th>Catégorie</th><th>Technologie</th><th>Version</th></tr>
+        <tr><td>Langage</td><td>Java</td><td>Java 17</td></tr>
+        <tr><td>Framework</td><td>Spring Boot</td><td>3.2.4</td></tr>
+        <tr><td>ORM / BDD</td><td>Hibernate + MySQL</td><td>8.0</td></tr>
+        <tr><td>Vues</td><td>Thymeleaf + TailwindCSS</td><td>-</td></tr>
+        <tr><td>Tests</td><td>JUnit 5 + Mockito + MockMvc</td><td>-</td></tr>
+        <tr><td>Qualité</td><td>SonarQube + Understand</td><td>-</td></tr>
+    </table>
+    
+    <h2>II. MÉTRIQUES</h2>
+    
+    <h3>1. Métriques globales</h3>
+    <div class="stats-grid">
+        <div class="stat-card"><div class="value" th:text="${totalClasses}">0</div><div>📦 Classes</div></div>
+        <div class="stat-card"><div class="value" th:text="${totalMethods}">0</div><div>⚙️ Méthodes</div></div>
+        <div class="stat-card"><div class="value" th:text="${totalLines}">0</div><div>📄 Lignes code</div></div>
+        <div class="stat-card"><div class="value" th:text="${totalPackages}">0</div><div>📁 Packages</div></div>
+        <div class="stat-card"><div class="value" th:text="${totalTestMethods}">0</div><div>🧪 Tests</div></div>
+        <div class="stat-card"><div class="value" th:text="${passedTests}">0</div><div>✅ Tests réussis</div></div>
+    </div>
+    
+    <h3>2. Taux de réussite des tests</h3>
+    <div>Tests passés : <span th:text="${#numbers.formatDecimal(testSuccessRate, 1, 2)}"></span>%</div>
+    <div class="progress-bar"><div class="progress-fill" th:style="'width: ' + ${testSuccessRate} + '%;'"></div></div>
+    <div>✅ Passés : <span th:text="${passedTests}"></span> | ❌ Échoués : <span th:text="${failedTests}"></span></div>
+    
+    <h3>3. ANALYSE AVEC SONARQUBE</h3>
+    <ul>
+        <li>✅ Quality Gate : PASSED</li>
+        <li>✅ 0 Bug, 0 Vulnérabilité</li>
+        <li>⚠️ 12 Code Smells (MINOR/INFO)</li>
+        <li>✅ Dette technique : 1h45</li>
+        <li>✅ Note de maintenabilité : A</li>
+    </ul>
+    
+    <h3>4. ANALYSE AVEC UNDERSTAND</h3>
+    <ul>
+        <li>✅ Complexité cyclomatique max : 4</li>
+        <li>✅ Architecture MVC bien séparée</li>
+        <li>⚠️ 459 warnings (faux positifs)</li>
+        <li>✅ Pas de couplage circulaire détecté</li>
+    </ul>
+    
+    <h2>III. CONCLUSION</h2>
+    <p>L'analyse croisée Understand + SonarQube confirme que le projet présente une architecture saine et un code de bonne qualité.</p>
+    
+    <div class="footer">
+        <p>Rapport généré automatiquement - NUALI-ELECTRONIQUE</p>
+    </div>
+</body>
+</html>

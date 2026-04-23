@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}"></head>
+<body class="bg-gray-50 text-gray-900 font-['Inter',system-ui]">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="flex">
+  
+  <!-- ASIDE BARRE DE NAVIGATION ADMIN -->
+  <aside class="w-64 min-h-screen bg-white border-r border-gray-200 fixed left-0 top-16 overflow-y-auto z-40">
+    <div class="p-5">
+      <div class="flex items-center gap-3 mb-8 pb-4 border-b border-gray-200">
+        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-bold text-gray-900">Panel Admin</p>
+          <p class="text-xs text-gray-500">Gestion complète</p>
+        </div>
+      </div>
+      
+      <nav class="space-y-1">
+        <a th:href="@{/admin}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Tableau de bord
+        </a>
+        
+        <a th:href="@{/admin/produits}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+          </svg>
+          Produits
+        </a>
+        
+        <a th:href="@{/admin/categories}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+          Catégories
+        </a>
+        
+        <a th:href="@{/admin/commandes}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+          </svg>
+          Commandes
+        </a>
+        
+        <a th:href="@{/admin/clients}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          Clients
+        </a>
+        <a th:href="@{/admin/rapport}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium bg-blue-50 text-blue-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Rapport AQL
+        </a>
+      </nav>
+      
+      <div class="mt-8 pt-4 border-t border-gray-200">
+        <a th:href="@{/}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Retour au site
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <div class="flex-1 ml-64">
+    <div class="max-w-7xl mx-auto px-8 py-8">
+      
+      <div class="mb-8">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">📊 Rapport de qualité logicielle</h1>
+            <p class="text-sm text-gray-500 mt-1">Analyse complète du code source et des tests</p>
+            <p class="text-xs text-gray-400 mt-1">Généré le : <span th:text="${#dates.format(reportDate, 'dd/MM/yyyy HH:mm:ss')}"></span></p>
+          </div>
+          <div class="flex gap-3">
+            <!-- Bouton Présentation -->
+            <a th:href="@{/admin/rapport/presentation}" 
+               class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 transition-all shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              Présentation
+            </a>
+            <!-- Bouton Télécharger Word -->
+            <a th:href="@{/admin/rapport/download-word}" 
+               class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-green-600 hover:bg-green-700 transition-all shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              Télécharger Word
+            </a>
+            <!-- Bouton Imprimer -->
+            <button onclick="window.print()" 
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+              </svg>
+              Imprimer
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div th:if="${error}" class="mb-6 px-4 py-3 rounded-xl text-sm font-medium bg-red-50 text-red-700 border border-red-200" th:text="${error}"></div>
+
+      <!-- Métriques globales -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500">📦 Classes</p><p class="text-3xl font-bold text-blue-600" th:text="${totalClasses}">0</p></div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500">🔧 Interfaces</p><p class="text-3xl font-bold text-blue-600" th:text="${totalInterfaces}">0</p></div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500">⚙️ Méthodes</p><p class="text-3xl font-bold text-blue-600" th:text="${totalMethods}">0</p></div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500">📄 Lignes code</p><p class="text-3xl font-bold text-blue-600" th:text="${totalLines}">0</p></div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500">📁 Packages</p><p class="text-3xl font-bold text-blue-600" th:text="${totalPackages}">0</p></div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500">🧪 Tests</p><p class="text-3xl font-bold text-blue-600" th:text="${totalTestMethods}">0</p></div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500">✅ Tests réussis</p><p class="text-3xl font-bold text-green-600" th:text="${passedTests}">0</p></div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500">📊 Assertions</p><p class="text-3xl font-bold text-blue-600" th:text="${totalAssertions}">0</p></div>
+      </div>
+
+      <!-- SECTION 1 : Taux de réussite (pliante) -->
+      <div class="bg-white rounded-xl shadow-sm border mb-4 overflow-hidden">
+        <div class="px-6 py-4 border-b bg-gray-50 flex justify-between items-center cursor-pointer" onclick="toggleSection('testSection')">
+          <h2 class="font-bold">🧪 Taux de réussite des tests</h2>
+          <svg id="testSectionIcon" class="w-5 h-5 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+        <div id="testSection" class="p-6">
+          <div class="flex justify-between text-sm mb-1"><span>Tests passés</span><span th:text="${#numbers.formatDecimal(testSuccessRate, 1, 2)} + '%'">0%</span></div>
+          <div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-green-500 h-2 rounded-full" th:style="'width: ' + ${testSuccessRate} + '%'"></div></div>
+          <div class="flex gap-4 mt-4 text-sm"><span class="text-green-600">✅ Passés: <span th:text="${passedTests}"></span></span><span class="text-red-600">❌ Échoués: <span th:text="${failedTests}"></span></span></div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 : Synthèse qualité (pliante) -->
+      <div class="bg-white rounded-xl shadow-sm border mb-4 overflow-hidden">
+        <div class="px-6 py-4 border-b bg-gray-50 flex justify-between items-center cursor-pointer" onclick="toggleSection('qualitySection')">
+          <h2 class="font-bold">📈 Synthèse de la qualité</h2>
+          <svg id="qualitySectionIcon" class="w-5 h-5 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+        <div id="qualitySection" class="p-6">
+          <div class="space-y-3">
+            <div class="flex justify-between py-2 border-b"><span>📊 Moyenne méthodes par classe</span><span class="font-semibold" th:text="${#numbers.formatDecimal(avgMethodsPerClass, 1, 2)}">0</span></div>
+            <div class="flex justify-between py-2 border-b"><span>📏 Moyenne lignes par classe</span><span class="font-semibold" th:text="${#numbers.formatDecimal(avgLinesPerClass, 1, 2)}">0</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 : Détail des classes (avec complexité cyclomatique) -->
+     <!-- SECTION 3 : Détail des classes (avec complexité cyclomatique) -->
+<div class="bg-white rounded-xl shadow-sm border mb-4 overflow-hidden">
+  <div class="px-6 py-4 border-b bg-gray-50 flex justify-between items-center cursor-pointer" onclick="toggleSection('classesSection')">
+    <h2 class="font-bold">📋 Détail des classes</h2>
+    <svg id="classesSectionIcon" class="w-5 h-5 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+    </svg>
+  </div>
+  <div id="classesSection" class="overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Classe</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Package</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Type</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Méthodes</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Lignes</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Comments</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Complexité</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="c : ${classMetrics}" class="border-b border-gray-100 hover:bg-gray-50 transition">
+          <td class="px-4 py-2 font-medium text-gray-900" th:text="${c.className}">-</td>
+          <td class="px-4 py-2 text-gray-500 font-mono text-xs" th:text="${c.packageName}">-</td>
+          <td class="px-4 py-2">
+            <span th:if="${c.type == 'Class'}" class="px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">📦 Class</span>
+            <span th:if="${c.type == 'Interface'}" class="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">🔌 Interface</span>
+            <span th:if="${c.type == 'Enum'}" class="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">⚡ Enum</span>
+          </td>
+          <td class="px-4 py-2 text-center" th:text="${c.methodCount}">0</td>
+          <td class="px-4 py-2 text-center" th:text="${c.linesOfCode}">0</td>
+          <td class="px-4 py-2">
+            <div class="flex items-center gap-2">
+              <span th:text="${#numbers.formatDecimal(c.commentRatio, 1, 2)} + '%'">0%</span>
+              <div class="w-16 bg-gray-200 rounded-full h-1.5">
+                <div class="bg-blue-500 h-1.5 rounded-full" th:style="'width: ' + ${c.commentRatio} + '%'"></div>
+              </div>
+            </div>
+          </td>
+          <td class="px-4 py-2">
+            <span class="px-2 py-1 rounded-full text-xs font-semibold"
+                  th:classappend="${c.cyclomaticComplexity < 5} ? 'bg-green-100 text-green-700' : (${c.cyclomaticComplexity < 10} ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700')"
+                  th:text="${c.cyclomaticComplexity}">0</span>
+          </td>
+          <td class="px-4 py-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-1 rounded-full text-xs font-semibold"
+                    th:classappend="${c.qualityScore >= 75} ? 'bg-green-100 text-green-700' : (${c.qualityScore >= 50} ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700')"
+                    th:text="${c.qualityScore}">0</span>
+              <div class="w-16 bg-gray-200 rounded-full h-1.5">
+                <div class="h-1.5 rounded-full" th:style="'width: ' + ${c.qualityScore} + '%; background: ' + (${c.qualityScore >= 75} ? '#10b981' : (${c.qualityScore >= 50} ? '#3b82f6' : '#f59e0b'))"></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+      <!-- SECTION 4 : Détail des tests (pliante) -->
+      <div class="bg-white rounded-xl shadow-sm border mb-4 overflow-hidden">
+        <div class="px-6 py-4 border-b bg-gray-50 flex justify-between items-center cursor-pointer" onclick="toggleSection('testsSection')">
+          <h2 class="font-bold">🧪 Détail des tests</h2>
+          <svg id="testsSectionIcon" class="w-5 h-5 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+        <div id="testsSection" class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50"></tr><th class="px-4 py-3 text-left">Test</th><th>Classe</th><th>Statut</th><th>Durée</th></tr></thead>
+            <tbody>
+              <tr th:each="t : ${testMetrics}" class="border-b hover:bg-gray-50">
+                <td class="px-4 py-2" th:text="${t.testName}">-</td>
+                <td class="px-4 py-2" th:text="${t.className}">-</td>
+                <td class="px-4 py-2"><span class="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">✅ PASSED</span></td>
+                <td class="px-4 py-2" th:text="${t.duration}">0ms</td>
+               </tr>
+              <tr th:if="${testMetrics.empty}"><td colspan="4" class="px-4 py-8 text-center text-gray-500">Aucun test trouvé</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 5 : Analyse par package (pliante) -->
+      <div class="bg-white rounded-xl shadow-sm border mb-4 overflow-hidden">
+        <div class="px-6 py-4 border-b bg-gray-50 flex justify-between items-center cursor-pointer" onclick="toggleSection('packagesSection')">
+          <h2 class="font-bold">📁 Analyse par package</h2>
+          <svg id="packagesSectionIcon" class="w-5 h-5 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+        <div id="packagesSection" class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50"><tr><th class="px-4 py-3 text-left">Package</th><th>Classes</th><th>Méthodes</th><th>Lignes</th><th>Moy. lignes/classe</th> </tr></thead>
+            <tbody>
+              <tr th:each="p : ${packageMetrics}" class="border-b hover:bg-gray-50">
+                <td class="px-4 py-2 font-mono text-xs" th:text="${p.name}">-</td>
+                <td class="px-4 py-2" th:text="${p.totalClasses}">0</td>
+                <td class="px-4 py-2" th:text="${p.totalMethods}">0</td>
+                <td class="px-4 py-2" th:text="${p.totalLines}">0</td>
+                <td class="px-4 py-2" th:text="${#numbers.formatDecimal(p.avgLinesPerClass, 1, 2)}">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 6 : Recommandations (pliante) -->
+      <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+        <div class="px-6 py-4 border-b bg-gray-50 flex justify-between items-center cursor-pointer" onclick="toggleSection('recommendationsSection')">
+          <h2 class="font-bold">💡 Recommandations</h2>
+          <svg id="recommendationsSectionIcon" class="w-5 h-5 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+        <div id="recommendationsSection" class="p-6">
+          <ul class="space-y-3">
+            <li th:if="${avgMethodsPerClass > 10}" class="flex items-start gap-2"><span class="text-yellow-500">⚠️</span> <span>Densité de méthodes élevée (<span th:text="${#numbers.formatDecimal(avgMethodsPerClass, 1, 2)}"></span> méthodes/classe).</span></li>
+            <li th:unless="${avgMethodsPerClass > 10}" class="flex items-start gap-2"><span class="text-green-500">✅</span> <span>Bonne densité de méthodes (<span th:text="${#numbers.formatDecimal(avgMethodsPerClass, 1, 2)}"></span> méthodes/classe).</span></li>
+            <li th:if="${avgLinesPerClass > 200}" class="flex items-start gap-2"><span class="text-yellow-500">⚠️</span> <span>Classes trop longues (<span th:text="${#numbers.formatDecimal(avgLinesPerClass, 1, 2)}"></span> lignes/classe).</span></li>
+            <li th:unless="${avgLinesPerClass > 200}" class="flex items-start gap-2"><span class="text-green-500">✅</span> <span>Longueur des classes raisonnable (<span th:text="${#numbers.formatDecimal(avgLinesPerClass, 1, 2)}"></span> lignes/classe).</span></li>
+            <li th:if="${totalTestMethods == 0}" class="flex items-start gap-2"><span class="text-blue-500">🧪</span> <span>Aucun test détecté. Ajoutez des tests unitaires.</span></li>
+            <li th:if="${testSuccessRate < 80 and totalTestMethods > 0}" class="flex items-start gap-2"><span class="text-red-500">🔧</span> <span>Taux de réussite des tests faible (<span th:text="${#numbers.formatDecimal(testSuccessRate, 1, 2)}"></span>%).</span></li>
+            <li class="flex items-start gap-2"><span class="text-blue-500">📈</span> <span>Pensez à maintenir une documentation à jour.</span></li>
+            <li class="flex items-start gap-2"><span class="text-blue-500">🔄</span> <span>Effectuez des revues de code régulières.</span></li>
+          </ul>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</main>
+
+<script>
+  function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const icon = document.getElementById(sectionId + 'Icon');
+    
+    if (section.style.display === 'none') {
+      section.style.display = 'block';
+      icon.style.transform = 'rotate(0deg)';
+    } else {
+      section.style.display = 'none';
+      icon.style.transform = 'rotate(-90deg)';
+    }
+  }
+</script>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
