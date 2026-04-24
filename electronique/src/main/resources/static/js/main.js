@@ -1,7 +1,7 @@
 // ── Thème CSS Variables ───────────────────────────────────
 const themes = {
   dark: {
-    '--bg':    '#0f0f0f', '--nav':   '#161616', '--card':  '#1c1c1c',
+
     '--text':  '#f0f0f0', '--muted': '#9ca3af', '--border':'#2e2e2e',
     '--accent':'#F5C518', '--input': '#242424', '--badge': '#2a2a2a',
   },

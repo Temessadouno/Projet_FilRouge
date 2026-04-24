@@ -77,4 +77,10 @@ public class ProduitService {
     public long countAll() {
         return produitRepository.count();
     }
+    
+    
+    //pour l'affichage sur la page d'acceuil, en pub
+    public List<Produit> findTop5ByOrderByCreatedAtDesc() {
+        return produitRepository.findTop5ByOrderByCreatedAtDesc();
+    }
 }

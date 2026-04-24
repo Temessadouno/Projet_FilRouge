@@ -38,6 +38,7 @@
       <div class="divide-y divide-gray-100">
         <div th:each="item : ${items}" class="flex items-center gap-4 px-5 py-4">
           
+           <th:block th:if="${item.enabled}">
           <!-- Image -->
           <img th:src="${item.produit.imageUrl}" 
                th:alt="${item.produit.nom}"
@@ -56,6 +57,7 @@
           <span class="font-bold text-sm text-blue-600"
                 th:text="${#numbers.formatDecimal(item.produit.prix * item.quantite,1,2)} + ' MAD'">
           </span>
+          </th:block>
         </div>
       </div>
 

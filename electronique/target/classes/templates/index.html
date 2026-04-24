@@ -6,7 +6,7 @@
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <!-- ============================================================ -->
-<!-- MAIN CONTENT AVEC PUBLICITÉ À DROITE -->
+<!-- MAIN CONTENT AVEC DERNIERS PRODUITS ROTATIFS À DROITE -->
 <!-- ============================================================ -->
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <div class="flex flex-col lg:flex-row gap-8">
@@ -86,35 +86,55 @@
       </section>
     </div>
 
+
+
     <!-- ======================================================== -->
-    <!-- COLONNE DROITE : PUBLICITÉS ROTATIVES -->
+    <!-- COLONNE DROITE : CARROUSEL DES 5 DERNIERS PRODUITS -->
     <!-- ======================================================== -->
     <aside class="lg:w-1/3">
       <div class="sticky top-24 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-6 overflow-hidden min-h-[450px] flex flex-col shadow-sm">
         
         <!-- Icône décorative -->
         <div class="text-center mb-4">
-          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
+          <div class="inline-flex items-center justify-center ">
+            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+		        <a th:href="@{/}" class="flex items-center gap-2.5 group">
+				  
+				  <!-- LOGO -->
+				  <img th:src="@{/images/logo.png}" 
+				       alt="Logo"
+				       class=" rounded-full bg-white bourder-2 border-green-600  object-contain">
+				
+				</a>
+		      </div>
+
+          </div>
+        </div>
+  
+       
+        <p class="text-center text-xs text-gray-500 mb-4">Découvrez nos derniers arrivages</p>
+        
+        <!-- Carrousel de produits -->
+        <div id="productsCarousel" class="flex-1 flex flex-col items-center justify-center text-center transition-opacity duration-500">
+          <div id="carouselContent">
+            <!-- Contenu dynamique via JS -->
           </div>
         </div>
         
-        <!-- Contenu rotatif -->
-        <div id="adContainer" class="flex-1 flex flex-col items-center justify-center text-center transition-opacity duration-500">
-          <div id="adContent"></div>
-        </div>
-        
-        <!-- Indicateurs de pagination -->
-        <div class="flex justify-center gap-2 mt-6">
-          <div id="dot1" class="w-2 h-2 rounded-full bg-blue-600 transition-all"></div>
-          <div id="dot2" class="w-2 h-2 rounded-full bg-gray-300 transition-all"></div>
-          <div id="dot3" class="w-2 h-2 rounded-full bg-gray-300 transition-all"></div>
-          <div id="dot4" class="w-2 h-2 rounded-full bg-gray-300 transition-all"></div>
+        <!-- Voir tout -->
+        <div class="mt-4 text-center">
+          <a th:href="@{/produits}" 
+             class="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors">
+            Voir tous les produits
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
         </div>
       </div>
     </aside>
+    
+    
   </div>
 </main>
 
@@ -231,69 +251,113 @@
   </div>
 </footer>
 
+
+
 <!-- ============================================================ -->
-<!-- SCRIPTS PUBLICITÉS ROTATIVES -->
+<!-- SCRIPT POUR LE CARROUSEL DES PRODUITS -->
 <!-- ============================================================ -->
-<script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
   (function() {
-    const ads = [
-      { icon: "🚚", title: "Livraison Express 24h", description: "Recevez vos commandes le lendemain, partout au Maroc", color: "blue" },
-      { icon: "🔒", title: "Paiement 100% Sécurisé", description: "Vos données bancaires sont protégées par chiffrement SSL", color: "green" },
-      { icon: "🎁", title: "-10% sur votre première commande", description: "Code bienvenue : NUALI10", color: "purple" },
-      { icon: "⭐", title: "Service Client 7j/7", description: "Une équipe à votre écoute pour vous assister", color: "orange" }
-    ];
+    // Récupérer les produits depuis le backend de manière sécurisée
+    let produits = [];
     
-    let currentAdIndex = 0;
-    let adInterval;
+    /*[# th:each="produit, iterStat : ${derniersProduits}"]*/
+    produits.push({
+      id: /*[[${produit.id}]]*/ 0,
+      nom: /*[[${produit.nom}]]*/ '',
+      marque: /*[[${produit.marque}]]*/ '',
+      prix: /*[[${produit.prix}]]*/ 0,
+      enStock: /*[[${produit.enStock}]]*/ true,
+      imageUrl: /*[[${produit.imageUrl}]]*/ ''
+    });
+    /*[/]*/
     
-    function showAd(index) {
-      const ad = ads[index];
-      const adContent = document.getElementById('adContent');
-      const dots = ['dot1', 'dot2', 'dot3', 'dot4'].map(id => document.getElementById(id));
+    if (produits.length > 0) {
+      let currentIndex = 0;
+      let carouselInterval;
       
-      dots.forEach((dot, i) => {
-        if (dot) {
-          if (i === index) {
-            dot.classList.remove('bg-gray-300');
-            dot.classList.add('bg-blue-600');
-          } else {
-            dot.classList.remove('bg-blue-600');
-            dot.classList.add('bg-gray-300');
-          }
-        }
-      });
-      
-      const container = document.getElementById('adContainer');
-      if (container) container.style.opacity = '0';
-      
-      setTimeout(() => {
-        const bgColors = { blue: 'from-blue-50 to-indigo-50', green: 'from-green-50 to-emerald-50', purple: 'from-purple-50 to-pink-50', orange: 'from-orange-50 to-amber-50' };
-        const adContainerDiv = document.querySelector('.lg\\:w-1\\/3 > div');
-        if (adContainerDiv) {
-          adContainerDiv.className = `sticky top-24 rounded-2xl bg-gradient-to-br ${bgColors[ad.color]} border border-${ad.color}-100 p-6 overflow-hidden min-h-[450px] flex flex-col shadow-sm`;
-        }
+      function renderProduct(index) {
+        const produit = produits[index];
+        const carouselContent = document.getElementById('carouselContent');
+
         
-        if (adContent) {
-          adContent.innerHTML = `
-            <div class="text-6xl mb-4">${ad.icon}</div>
-            <h3 class="text-xl font-bold text-gray-800 mb-3">${ad.title}</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">${ad.description}</p>
-            <div class="mt-6 w-12 h-1 bg-${ad.color}-400 rounded-full mx-auto"></div>
-          `;
-        }
-        if (container) container.style.opacity = '1';
-      }, 200);
+        // Afficher le produit avec animation
+        const container = document.getElementById('productsCarousel');
+        if (container) container.style.opacity = '0';
+        
+        setTimeout(() => {
+          if (carouselContent) {
+            const stockClass = produit.enStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+            const stockText = produit.enStock ? 'En stock' : 'Rupture';
+            const imageUrl = produit.imageUrl && produit.imageUrl !== '' ? produit.imageUrl : '/images/placeholder.png';
+            
+            carouselContent.innerHTML = `
+              <div class="w-full">
+                <div class="w-32 h-32 mx-auto rounded-xl overflow-hidden  mb-4">
+                  <img src="${imageUrl}" 
+                       alt="${produit.nom.replace(/"/g, '&quot;')}"
+                       onerror="this.src='/images/placeholder.png'"
+                       class="w-full h-full object-cover"/>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">${produit.nom.replace(/"/g, '&quot;')}</h3>
+                <p class="text-sm text-gray-500 mb-2">${produit.marque ? produit.marque.replace(/"/g, '&quot;') : ''}</p>
+                <p class="text-2xl font-extrabold text-blue-600 mb-2">${produit.prix.toFixed(2)} MAD</p>
+                <span class="inline-block text-xs px-3 py-1 rounded-full ${stockClass} mb-3">${stockText}</span>
+                <div class="flex gap-2 justify-center mt-2">
+                  <a href="/produits/${produit.id}" 
+                     class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all">
+                    Voir détails
+                  </a>
+                </div>
+              </div>
+            `;
+          }
+          if (container) container.style.opacity = '1';
+        }, 200);
+      }
+      
+      function nextProduct() {
+        currentIndex = (currentIndex + 1) % produits.length;
+        renderProduct(currentIndex);
+      }
+      
+      // Initialiser le carrousel
+      renderProduct(0);
+      carouselInterval = setInterval(nextProduct, 5000);
+      
+      // Arrêter le carrousel au survol
+      const carouselContainer = document.getElementById('productsCarousel');
+      if (carouselContainer) {
+        carouselContainer.addEventListener('mouseenter', () => {
+          if (carouselInterval) clearInterval(carouselInterval);
+        });
+        carouselContainer.addEventListener('mouseleave', () => {
+          carouselInterval = setInterval(nextProduct, 5000);
+        });
+      }
+      
+   
+    } else {
+      // Aucun produit trouvé
+      const carouselContent = document.getElementById('carouselContent');
+      if (carouselContent) {
+        carouselContent.innerHTML = `
+          <div class="text-center py-8">
+            <div class="text-6xl mb-4">📦</div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Aucun produit</h3>
+            <p class="text-sm text-gray-500">Ajoutez votre premier produit</p>
+          </div>
+        `;
+      }
     }
-    
-    function nextAd() {
-      currentAdIndex = (currentAdIndex + 1) % ads.length;
-      showAd(currentAdIndex);
-    }
-    
-    showAd(0);
-    adInterval = setInterval(nextAd, 5000);
   })();
+  /*]]>*/
 </script>
+
+
+
+
 
 <script th:src="@{/js/main.js}"></script>
 </body>

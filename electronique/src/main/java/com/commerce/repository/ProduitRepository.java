@@ -21,4 +21,6 @@ public interface ProduitRepository extends JpaRepository<Produit, Integer> {
     List<Produit> search(@Param("q") String q);
     
     List<Produit> findByCategorieId(Integer categorieId);
+    
+    List<Produit> findTop5ByOrderByCreatedAtDesc();
 }

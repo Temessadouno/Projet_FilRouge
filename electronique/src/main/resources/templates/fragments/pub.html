@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="pub-sidebar" class="sticky top-24 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-6 overflow-hidden min-h-[450px] flex flex-col shadow-sm">
+  
+  <!-- Logo -->
+  <div class="text-center mb-4">
+    <div class="inline-flex items-center justify-center">
+      <div class="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center mx-auto mb-2">
+        <img th:src="@{/images/logo.png}" 
+             alt="Logo"
+             onerror="this.src='/images/placeholder.png'"
+             class="w-12 h-12 object-contain">
+      </div>
+    </div>
+  </div>
+  
+  <!-- Titre -->
+  <h3 class="text-center text-lg font-bold text-gray-800 mb-1">🆕 Nouveautés</h3>
+  <p class="text-center text-xs text-gray-500 mb-4">Découvrez nos derniers arrivages</p>
+  
+  <!-- Carrousel de produits -->
+  <div id="productsCarousel" class="flex-1 flex flex-col items-center justify-center text-center">
+    <div id="carouselContent">
+      <div class="text-center py-8">
+        <div class="text-6xl mb-4">📦</div>
+        <p class="text-gray-500">Chargement...</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Voir tout -->
+  <div class="mt-4 text-center">
+    <a th:href="@{/produits}" 
+       class="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors">
+      Voir tous les produits
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+  
+  <!-- Retour accueil -->
+  <div class="mt-4 pt-3 border-t border-blue-200 text-center">
+    <a href="/" class="inline-flex items-center gap-2 text-xs text-gray-500 hover:text-blue-600 transition-colors">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Retour à l'accueil
+    </a>
+  </div>
+</div>
+
+<!-- Utiliser fetch API au lieu de Thymeleaf inline -->
+<script>
+  (function() {
+    function loadProducts() {
+      fetch('/api/derniers-produits')
+        .then(response => response.json())
+        .then(produits => {
+          console.log('Produits chargés:', produits.length);
+          
+          if (produits && produits.length > 0) {
+            let currentIndex = 0;
+            let carouselInterval;
+            
+            function renderProduct(index) {
+              const produit = produits[index];
+              const carouselContent = document.getElementById('carouselContent');
+              
+              if (carouselContent) {
+                const stockClass = produit.enStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+                const stockText = produit.enStock ? 'En stock' : 'Rupture';
+                const imageUrl = produit.imageUrl && produit.imageUrl !== '' ? produit.imageUrl : '/images/placeholder.png';
+                
+                carouselContent.innerHTML = `
+                  <div class="w-full">
+                    <div class="w-24 h-24 mx-auto rounded-xl overflow-hidden bg-gray-100 mb-3">
+                      <img src="${imageUrl}" 
+                           alt="${escapeHtml(produit.nom)}"
+                           onerror="this.src='/images/placeholder.png'"
+                           class="w-full h-full object-cover"/>
+                    </div>
+                    <h4 class="text-md font-bold text-gray-800 mb-1">${escapeHtml(produit.nom)}</h4>
+                    <p class="text-xs text-gray-500 mb-1">${escapeHtml(produit.marque || '')}</p>
+                    <p class="text-lg font-extrabold text-blue-600">${produit.prix.toFixed(2)} MAD</p>
+                    <span class="inline-block text-xs px-2 py-0.5 rounded-full ${stockClass} mt-1 mb-2">${stockText}</span>
+                    <div class="mt-2">
+                      <a href="/produits/${produit.id}" 
+                         class="inline-block px-3 py-1 rounded-lg text-xs font-medium text-gray-600 border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition-all">
+                        Voir détails
+                      </a>
+                    </div>
+                  </div>
+                `;
+              }
+            }
+            
+            function nextProduct() {
+              currentIndex = (currentIndex + 1) % produits.length;
+              renderProduct(currentIndex);
+            }
+            
+            renderProduct(0);
+            carouselInterval = setInterval(nextProduct, 5000);
+            
+            const carouselContainer = document.getElementById('productsCarousel');
+            if (carouselContainer) {
+              carouselContainer.addEventListener('mouseenter', () => {
+                if (carouselInterval) clearInterval(carouselInterval);
+              });
+              carouselContainer.addEventListener('mouseleave', () => {
+                carouselInterval = setInterval(nextProduct, 5000);
+              });
+            }
+          } else {
+            const carouselContent = document.getElementById('carouselContent');
+            if (carouselContent) {
+              carouselContent.innerHTML = `
+                <div class="text-center py-8">
+                  <div class="text-6xl mb-4">📦</div>
+                  <p class="text-gray-500">Aucun produit</p>
+                </div>
+              `;
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Erreur:', error);
+          const carouselContent = document.getElementById('carouselContent');
+          if (carouselContent) {
+            carouselContent.innerHTML = `
+              <div class="text-center py-8">
+                <div class="text-6xl mb-4">⚠️</div>
+                <p class="text-gray-500">Service indisponible</p>
+              </div>
+            `;
+          }
+        });
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // Charger les produits
+    loadProducts();
+  })();
+</script>
+</html>
